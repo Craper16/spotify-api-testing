@@ -6,18 +6,6 @@ interface createPlaylistData {
   public: boolean;
 }
 
-export const getUser = async () => {
-  const access_token = localStorage.getItem('access_token');
-
-  return await instance
-    .get('/me', { headers: { Authorization: `Bearer ${access_token}` } })
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
-    .catch((error) => error.error?.message || 'An Error has occured');
-};
-
 export const getUserPlaylists = async () => {
   const access_token = localStorage.getItem('access_token');
   const userId = localStorage.getItem('userId');

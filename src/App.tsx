@@ -15,7 +15,7 @@ import { searchArtists, searchTracks } from './config/search/searchConfig';
 import {
   createUserPlayList,
   getUserPlaylists,
-} from './config/users/usersConfig';
+} from './config/playlists/playlistsConfig';
 
 function App() {
   const [limit, setLimit] = useState(10);
