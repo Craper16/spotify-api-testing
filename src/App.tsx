@@ -24,6 +24,8 @@ function App() {
   const [playlistDescription, setPlaylistDescription] = useState('');
   const [isPlaylistPublic, setIsPlaylistPublic] = useState(false);
 
+  console.log(isPlaylistPublic);
+
   const dispatch = useAppDispatch();
 
   const { isLoggedIn, display_name, images } = useAppSelector(
@@ -50,7 +52,11 @@ function App() {
     description: string;
     public: boolean;
   }) => {
-    createUserPlayList(body);
+    createUserPlayList({
+      name: body.name,
+      description: body.description,
+      public: body.public,
+    });
   };
 
   const retrieveDataFromAccessToken = useCallback(async () => {
@@ -66,6 +72,7 @@ function App() {
   }, [dispatch]);
 
   const fetchAccessToken = async () => {
+    console.log('is Running');
     const access_token = await new URLSearchParams(window.location.hash).get(
       '#access_token'
     );
@@ -89,7 +96,7 @@ function App() {
     <div className="App">
       {!isLoggedIn ? (
         <a
-          href={`${AUTH_ENDPOINT}?response_type=${RESPONSE_TYPE}&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}`}
+          href={`${AUTH_ENDPOINT}?response_type=${RESPONSE_TYPE}&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=playlist-modify-public%20playlist-modify-private`}
         >
           Login to spotify
         </a>
@@ -139,45 +146,42 @@ function App() {
               Search
             </button>
           </div>
-          <form
-            onSubmit={() =>
+          <label id="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            value={playlistName}
+            onChange={(e) => setPlaylistName(e.target.value)}
+          />
+          <label id="description">Description</label>
+          <input
+            type="text"
+            id="description"
+            value={playlistDescription}
+            onChange={(e) => setPlaylistDescription(e.target.value)}
+          />
+          <button
+            onClick={() =>
+              setIsPlaylistPublic(
+                (prevIsPlaylistPublic) => !prevIsPlaylistPublic
+              )
+            }
+          >
+            {isPlaylistPublic ? 'Public' : 'Private'}
+          </button>
+          <button
+            type="submit"
+            onClick={() =>
               handleCreatePlaylist({
                 name: playlistName,
                 description: playlistDescription,
                 public: isPlaylistPublic,
               })
             }
+            disabled={!playlistName && !playlistDescription}
           >
-            <label id="name">Name</label>
-            <input
-              type="text"
-              id="name"
-              value={playlistName}
-              onChange={(e) => setPlaylistName(e.target.value)}
-            />
-            <label id="description">Description</label>
-            <input
-              type="text"
-              id="description"
-              value={playlistDescription}
-              onChange={(e) => setPlaylistDescription(e.target.value)}
-            />
-            <button
-              onClick={() =>
-                setIsPlaylistPublic(
-                  (prevIsPlaylistPublic) => !prevIsPlaylistPublic
-                )
-              }
-            >
-              {isPlaylistPublic ? 'Public' : 'Private'}
-            </button>
-            <button
-              type="submit"
-              disabled={!playlistName && !playlistDescription}
-            >
-              Create Playlist
-            </button>
-          </form>
+            Create Playlist
+          </button>
           {isLoading && <Spinner size={'md'} />}
           {artistData
             ? artistData.map((artist, i) => (

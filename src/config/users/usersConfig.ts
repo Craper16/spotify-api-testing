@@ -50,7 +50,11 @@ export const createUserPlayList = async (body: {
     .post(
       `/users/${userId}/playlists`,
       {
-        body: body,
+        data: {
+          name: body.name,
+          description: body.description,
+          public: body.public,
+        },
       },
       { headers: { Authorization: `Bearer ${access_token}` } }
     )
