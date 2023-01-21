@@ -19,7 +19,8 @@ import {
 
 function App() {
   const [limit, setLimit] = useState(10);
-  const [search, setSearch] = useState('');
+  const [searchArtist, setSearchArtist] = useState('');
+  const [searchTrack, setSearchTrack] = useState('');
   const [playlistName, setPlaylistName] = useState('');
   const [playlistDescription, setPlaylistDescription] = useState('');
   const [isPlaylistPublic, setIsPlaylistPublic] = useState(false);
@@ -121,12 +122,12 @@ function App() {
             <input
               type="text"
               id="search_artists"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={searchArtist}
+              onChange={(e) => setSearchArtist(e.target.value)}
             />
             <button
-              disabled={!search}
-              onClick={() => searchArtists(search)}
+              disabled={!searchArtist}
+              onClick={() => searchArtists(searchArtist)}
             >
               Search
             </button>
@@ -136,12 +137,12 @@ function App() {
             <input
               type="text"
               id="search_tracks"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              value={searchTrack}
+              onChange={(e) => setSearchTrack(e.target.value)}
             />
             <button
-              disabled={!search}
-              onClick={() => searchTracks(search)}
+              disabled={!searchTrack}
+              onClick={() => searchTracks(searchTrack)}
             >
               Search
             </button>
