@@ -93,7 +93,7 @@ function App() {
   });
 
   return (
-    <div className="App">
+    <div>
       {!isLoggedIn ? (
         <a
           href={`${AUTH_ENDPOINT}?response_type=${RESPONSE_TYPE}&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=playlist-modify-public%20playlist-modify-private`}
