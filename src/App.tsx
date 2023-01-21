@@ -9,13 +9,26 @@ import {
 } from './helpers/consts';
 import { FetchArtists } from './redux/artists/artistsActions';
 import { Spinner } from '@chakra-ui/spinner';
+import { fetchTracks } from './config/artists/artistsConfig';
+import { GetUser } from './redux/auth/authActions';
+import { searchArtists, searchTracks } from './config/search/searchConfig';
+import {
+  createUserPlayList,
+  getUserPlaylists,
+} from './config/users/usersConfig';
 
 function App() {
   const [limit, setLimit] = useState(10);
+  const [search, setSearch] = useState('');
+  const [playlistName, setPlaylistName] = useState('');
+  const [playlistDescription, setPlaylistDescription] = useState('');
+  const [isPlaylistPublic, setIsPlaylistPublic] = useState(false);
 
   const dispatch = useAppDispatch();
 
-  const { isLoggedIn } = useAppSelector((state) => state.auth);
+  const { isLoggedIn, display_name, images } = useAppSelector(
+    (state) => state.auth
+  );
   const { artistData, isError, isLoading, message } = useAppSelector(
     (state) => state.artists
   );
@@ -23,6 +36,21 @@ function App() {
   const handleLogout = () => {
     dispatch(defaultState());
     localStorage.clear();
+  };
+
+  const fetchUserData = useCallback(() => {
+    const access_token = localStorage.getItem('access_token');
+    if (access_token) {
+      dispatch(GetUser());
+    }
+  }, [dispatch]);
+
+  const handleCreatePlaylist = (body: {
+    name: string;
+    description: string;
+    public: boolean;
+  }) => {
+    createUserPlayList(body);
   };
 
   const retrieveDataFromAccessToken = useCallback(async () => {
@@ -67,10 +95,89 @@ function App() {
         </a>
       ) : (
         <>
+          {display_name && <div>{display_name}</div>}
+          {images.length !== 0 && <img src={images[0].url || ''} />}
+          {localStorage.getItem('userId') ? (
+            <button onClick={() => getUserPlaylists()}>Fetch Playlists</button>
+          ) : null}
           <button onClick={handleLogout}>Logout</button>
           <button onClick={() => dispatch(FetchArtists(limit))}>
             Fetch Artists
           </button>
+          <button onClick={() => setLimit((prevLimit) => prevLimit + 10)}>
+            Load more
+          </button>
+          <button onClick={() => fetchTracks()}>Fetch Tracks</button>
+          <button onClick={() => fetchUserData()}>Fetch user profile</button>
+          <div>
+            <label id="search_artists">Search artist</label>
+            <input
+              type="text"
+              id="search_artists"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button
+              disabled={!search}
+              onClick={() => searchArtists(search)}
+            >
+              Search
+            </button>
+          </div>
+          <div>
+            <label id="search_track">Search Tracks</label>
+            <input
+              type="text"
+              id="search_tracks"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button
+              disabled={!search}
+              onClick={() => searchTracks(search)}
+            >
+              Search
+            </button>
+          </div>
+          <form
+            onSubmit={() =>
+              handleCreatePlaylist({
+                name: playlistName,
+                description: playlistDescription,
+                public: isPlaylistPublic,
+              })
+            }
+          >
+            <label id="name">Name</label>
+            <input
+              type="text"
+              id="name"
+              value={playlistName}
+              onChange={(e) => setPlaylistName(e.target.value)}
+            />
+            <label id="description">Description</label>
+            <input
+              type="text"
+              id="description"
+              value={playlistDescription}
+              onChange={(e) => setPlaylistDescription(e.target.value)}
+            />
+            <button
+              onClick={() =>
+                setIsPlaylistPublic(
+                  (prevIsPlaylistPublic) => !prevIsPlaylistPublic
+                )
+              }
+            >
+              {isPlaylistPublic ? 'Public' : 'Private'}
+            </button>
+            <button
+              type="submit"
+              disabled={!playlistName && !playlistDescription}
+            >
+              Create Playlist
+            </button>
+          </form>
           {isLoading && <Spinner size={'md'} />}
           {artistData
             ? artistData.map((artist, i) => (
@@ -81,9 +188,6 @@ function App() {
                 </div>
               ))
             : null}
-          <button onClick={() => setLimit((prevLimit) => prevLimit + 10)}>
-            Load more
-          </button>
           {isError && <div>{message}</div>}
         </>
       )}

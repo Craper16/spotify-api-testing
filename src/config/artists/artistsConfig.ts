@@ -13,3 +13,19 @@ export const fetchArtists = async (limit: number) => {
     })
     .catch((error) => error.error?.message || 'An error has occured');
 };
+
+export const fetchTracks = async () => {
+  const access_token = localStorage.getItem('access_token');
+
+  return await instance
+    .get('tracks/6kLCHFM39wkFjOuyPGLGeQ', {
+      headers: { Authorization: `Bearer ${access_token}` },
+    })
+    .then((response) => {
+      console.log(response);
+      return response;
+    })
+    .catch((error) => error.error?.message || 'An error has occured');
+};
+
+
