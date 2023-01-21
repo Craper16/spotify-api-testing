@@ -1,54 +1,70 @@
 import './App.css';
 
-import React, { useState, useEffect } from 'react';
-import SpotifyWebApi from 'spotify-web-api-js';
-
-const spotifyApi = new SpotifyWebApi();
-
-const getTokenFromUrl = () => {
-  return window.location.hash
-    .substring(1)
-    .split('&')
-    .reduce((initial, item) => {
-      let parts = item.split('=');
-      (initial as any)[(parts as any)[0]] = decodeURIComponent(parts[1]);
-      return initial;
-    }, {});
-};
+import React, { useState, useEffect, useCallback } from 'react';
+import { useAppDispatch, useAppSelector } from './redux/hooks';
+import { defaultState, setUser } from './redux/auth/authSlice';
+import {
+  CLIENT_ID,
+  AUTH_ENDPOINT,
+  REDIRECT_URI,
+  RESPONSE_TYPE,
+} from './helpers/consts';
 
 function App() {
-  const [spotifyToken, setSpotifyToken] = useState('');
-  const [nowPlaying, setNowPLaying] = useState({});
-  const [loggedIn, setLoggedIn] = useState(false);
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    console.log('Running', getTokenFromUrl());
-    const spotifyToken: string = getTokenFromUrl().access_token;
+  const { isLoggedIn } = useAppSelector((state) => state.auth);
 
-    window.location.hash = '';
-
-    console.log('This is our spotify token');
-
-    if (spotifyToken) {
-      setSpotifyToken(spotifyToken);
-      // useSpotify api
-      setLoggedIn(true);
-    }
-  });
-
-  const getNowPlaying = () => {
-    spotifyApi.getMyCurrentPlaybackState().then((response) => {
-      console.log(response);
-      setNowPLaying({
-        name: response.item?.name,
-        albumArt: response.item?.album?.images[0].url,
-      });
-    });
+  const handleLogout = () => {
+    dispatch(defaultState());
+    localStorage.clear();
   };
 
+  const retrieveDataFromAccessToken = useCallback(async () => {
+    const access_token = await localStorage.getItem('access_token');
+
+    if (access_token) {
+      dispatch(
+        setUser({
+          access_token: access_token,
+        })
+      );
+    }
+  }, [dispatch]);
+
+  const fetchAccessToken = async () => {
+    console.log(window.location.hash);
+
+    const access_token = await new URLSearchParams(window.location.hash).get(
+      '#access_token'
+    );
+
+    if (access_token) {
+      dispatch(setUser({ access_token: access_token }));
+    }
+
+    window.location.hash = '';
+  };
+
+  useEffect(() => {
+    retrieveDataFromAccessToken();
+  }, [retrieveDataFromAccessToken]);
+
+  useEffect(() => {
+    fetchAccessToken();
+  });
+
   return (
-    <div className="App">
-      {!loggedIn && <a href="http://localhost:8888">Login to spotify</a>}
+    <div className='App'>
+      {!isLoggedIn ? (
+        <a
+          href={`${AUTH_ENDPOINT}?response_type=${RESPONSE_TYPE}&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}`}
+        >
+          Login to spotify
+        </a>
+      ) : (
+        <button onClick={handleLogout}>Logout</button>
+      )}
     </div>
   );
 }
