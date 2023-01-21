@@ -25,8 +25,6 @@ function App() {
   const [playlistDescription, setPlaylistDescription] = useState('');
   const [isPlaylistPublic, setIsPlaylistPublic] = useState(false);
 
-  console.log(isPlaylistPublic);
-
   const dispatch = useAppDispatch();
 
   const { isLoggedIn, display_name, images } = useAppSelector(
@@ -73,7 +71,6 @@ function App() {
   }, [dispatch]);
 
   const fetchAccessToken = async () => {
-    console.log('is Running');
     const access_token = await new URLSearchParams(window.location.hash).get(
       '#access_token'
     );
@@ -162,6 +159,7 @@ function App() {
             onChange={(e) => setPlaylistDescription(e.target.value)}
           />
           <button
+            id="public"
             onClick={() =>
               setIsPlaylistPublic(
                 (prevIsPlaylistPublic) => !prevIsPlaylistPublic

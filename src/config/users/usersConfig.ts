@@ -16,7 +16,7 @@ export const getUserPlaylists = async () => {
   const access_token = localStorage.getItem('access_token');
   const userId = localStorage.getItem('userId');
   if (!userId) {
-    return 'Could not fetch userId';
+    return console.log('Could not fetch userId');
   }
 
   return await instance
