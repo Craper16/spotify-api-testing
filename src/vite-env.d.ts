@@ -5,6 +5,7 @@ interface ImportMetaEnv {
   readonly VITE_REDIRECT_URL: string;
   readonly VITE_AUTH_ENDPOINT: string;
   readonly VITE_RESPONSE_TYPE: string;
+  readonly VITE_BASE_URL: string;
 }
 
 interface ImportMeta {

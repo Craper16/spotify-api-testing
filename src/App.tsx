@@ -1,6 +1,4 @@
-import './App.css';
-
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
 import { defaultState, setUser } from './redux/auth/authSlice';
 import {
@@ -9,8 +7,11 @@ import {
   REDIRECT_URI,
   RESPONSE_TYPE,
 } from './helpers/consts';
+import { fetchArtists } from './config/artists/artistsConfig';
 
 function App() {
+  const [limit, setLimit] = useState(10);
+
   const dispatch = useAppDispatch();
 
   const { isLoggedIn } = useAppSelector((state) => state.auth);
@@ -21,7 +22,7 @@ function App() {
   };
 
   const retrieveDataFromAccessToken = useCallback(async () => {
-    const access_token = await localStorage.getItem('access_token');
+    const access_token = localStorage.getItem('access_token');
 
     if (access_token) {
       dispatch(
@@ -33,8 +34,6 @@ function App() {
   }, [dispatch]);
 
   const fetchAccessToken = async () => {
-    console.log(window.location.hash);
-
     const access_token = await new URLSearchParams(window.location.hash).get(
       '#access_token'
     );
@@ -54,6 +53,8 @@ function App() {
     fetchAccessToken();
   });
 
+  console.log(fetchArtists(10));
+
   return (
     <div className='App'>
       {!isLoggedIn ? (
@@ -63,7 +64,10 @@ function App() {
           Login to spotify
         </a>
       ) : (
-        <button onClick={handleLogout}>Logout</button>
+        <>
+          <button onClick={handleLogout}>Logout</button>
+          <button onClick={() => fetchArtists(limit)}>Fetch Artists</button>
+        </>
       )}
     </div>
   );
