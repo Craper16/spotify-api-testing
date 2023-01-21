@@ -7,7 +7,8 @@ import {
   REDIRECT_URI,
   RESPONSE_TYPE,
 } from './helpers/consts';
-import { fetchArtists } from './config/artists/artistsConfig';
+import { FetchArtists } from './redux/artists/artistsActions';
+import { Spinner } from '@chakra-ui/spinner';
 
 function App() {
   const [limit, setLimit] = useState(10);
@@ -15,6 +16,9 @@ function App() {
   const dispatch = useAppDispatch();
 
   const { isLoggedIn } = useAppSelector((state) => state.auth);
+  const { artistData, isError, isLoading, message } = useAppSelector(
+    (state) => state.artists
+  );
 
   const handleLogout = () => {
     dispatch(defaultState());
@@ -53,10 +57,8 @@ function App() {
     fetchAccessToken();
   });
 
-  console.log(fetchArtists(10));
-
   return (
-    <div className='App'>
+    <div className="App">
       {!isLoggedIn ? (
         <a
           href={`${AUTH_ENDPOINT}?response_type=${RESPONSE_TYPE}&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}`}
@@ -66,7 +68,23 @@ function App() {
       ) : (
         <>
           <button onClick={handleLogout}>Logout</button>
-          <button onClick={() => fetchArtists(limit)}>Fetch Artists</button>
+          <button onClick={() => dispatch(FetchArtists(limit))}>
+            Fetch Artists
+          </button>
+          {isLoading && <Spinner size={'md'} />}
+          {artistData
+            ? artistData.map((artist, i) => (
+                <div key={i}>
+                  {artist.artists.map((art) => (
+                    <div key={art.id}>{art.name}</div>
+                  ))}
+                </div>
+              ))
+            : null}
+          <button onClick={() => setLimit((prevLimit) => prevLimit + 10)}>
+            Load more
+          </button>
+          {isError && <div>{message}</div>}
         </>
       )}
     </div>

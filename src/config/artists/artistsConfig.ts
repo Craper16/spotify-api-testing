@@ -11,5 +11,5 @@ export const fetchArtists = async (limit: number) => {
       console.log(response);
       return response;
     })
-    .catch((error) => error.message || 'An error has occured');
+    .catch((error) => error.error?.message || 'An error has occured');
 };
