@@ -47,6 +47,7 @@ const authSlice = createSlice({
       state.isLoading = initialState.isLoading;
       state.message = initialState.message;
       state.display_name = initialState.display_name;
+      state.id = initialState.id;
     },
   },
   extraReducers(builder) {
