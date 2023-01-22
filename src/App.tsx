@@ -16,6 +16,7 @@ import {
   createUserPlayList,
   getUserPlaylists,
 } from './config/playlists/playlistsConfig';
+import { Button } from '@chakra-ui/react';
 
 function App() {
   const [limit, setLimit] = useState(10);
@@ -27,7 +28,7 @@ function App() {
 
   const dispatch = useAppDispatch();
 
-  const { isLoggedIn, display_name, images } = useAppSelector(
+  const { isLoggedIn, display_name, images, access_token } = useAppSelector(
     (state) => state.auth
   );
   const { artistData, isError, isLoading, message } = useAppSelector(
@@ -90,6 +91,12 @@ function App() {
     fetchAccessToken();
   });
 
+  useEffect(() => {
+    if (access_token) {
+      fetchUserData();
+    }
+  }, [access_token]);
+
   return (
     <div>
       {!isLoggedIn ? (
@@ -103,17 +110,16 @@ function App() {
           {display_name && <div>{display_name}</div>}
           {images.length !== 0 && <img src={images[0].url || ''} />}
           {localStorage.getItem('userId') ? (
-            <button onClick={() => getUserPlaylists()}>Fetch Playlists</button>
+            <Button onClick={() => getUserPlaylists()}>Fetch Playlists</Button>
           ) : null}
-          <button onClick={handleLogout}>Logout</button>
-          <button onClick={() => dispatch(FetchArtists(limit))}>
+          <Button onClick={handleLogout}>Logout</Button>
+          <Button onClick={() => dispatch(FetchArtists(limit))}>
             Fetch Artists
-          </button>
-          <button onClick={() => setLimit((prevLimit) => prevLimit + 10)}>
+          </Button>
+          <Button onClick={() => setLimit((prevLimit) => prevLimit + 10)}>
             Load more
-          </button>
-          <button onClick={() => fetchTracks()}>Fetch Tracks</button>
-          <button onClick={() => fetchUserData()}>Fetch user profile</button>
+          </Button>
+          <Button onClick={() => fetchTracks()}>Fetch Tracks</Button>
           <div>
             <label id="search_artists">Search artist</label>
             <input
@@ -122,12 +128,12 @@ function App() {
               value={searchArtist}
               onChange={(e) => setSearchArtist(e.target.value)}
             />
-            <button
+            <Button
               disabled={!searchArtist}
               onClick={() => searchArtists(searchArtist)}
             >
               Search
-            </button>
+            </Button>
           </div>
           <div>
             <label id="search_track">Search Tracks</label>
@@ -137,12 +143,12 @@ function App() {
               value={searchTrack}
               onChange={(e) => setSearchTrack(e.target.value)}
             />
-            <button
+            <Button
               disabled={!searchTrack}
               onClick={() => searchTracks(searchTrack)}
             >
               Search
-            </button>
+            </Button>
           </div>
           <label id="name">Name</label>
           <input
@@ -158,7 +164,7 @@ function App() {
             value={playlistDescription}
             onChange={(e) => setPlaylistDescription(e.target.value)}
           />
-          <button
+          <Button
             id="public"
             onClick={() =>
               setIsPlaylistPublic(
@@ -167,8 +173,8 @@ function App() {
             }
           >
             {isPlaylistPublic ? 'Public' : 'Private'}
-          </button>
-          <button
+          </Button>
+          <Button
             type="submit"
             onClick={() =>
               handleCreatePlaylist({
@@ -180,7 +186,7 @@ function App() {
             disabled={!playlistName && !playlistDescription}
           >
             Create Playlist
-          </button>
+          </Button>
           {isLoading && <Spinner size={'md'} />}
           {artistData
             ? artistData.map((artist, i) => (
