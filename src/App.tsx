@@ -1,15 +1,13 @@
 import React, { useEffect, useCallback, useState } from 'react';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
 import { defaultState, setUser } from './redux/auth/authSlice';
+
 import {
-  CLIENT_ID,
-  AUTH_ENDPOINT,
-  REDIRECT_URI,
-  RESPONSE_TYPE,
-} from './helpers/consts';
-import { FetchArtists } from './redux/artists/artistsActions';
-import { Spinner } from '@chakra-ui/spinner';
-import { fetchTracks } from './config/artists/artistsConfig';
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import { GetUser } from './redux/auth/authActions';
 import { searchArtists, searchTracks } from './config/search/searchConfig';
 import {
@@ -17,9 +15,14 @@ import {
   getUserPlaylists,
 } from './config/playlists/playlistsConfig';
 import { Button } from '@chakra-ui/react';
+import MainNavbar from './components/navigationbar/MainNavbar';
+import AuthScreen from './pages/auth/AuthScreen';
+import Error from './pages/Error';
+import { MAIN_AUTH, AUTHENTICATE, HOME } from './helpers/pathsConsts';
+import Home from './pages/Home';
+import Authenticate from './pages/auth/Authenticate';
 
 function App() {
-  const [limit, setLimit] = useState(10);
   const [searchArtist, setSearchArtist] = useState('');
   const [searchTrack, setSearchTrack] = useState('');
   const [playlistName, setPlaylistName] = useState('');
@@ -28,11 +31,8 @@ function App() {
 
   const dispatch = useAppDispatch();
 
-  const { isLoggedIn, display_name, images, access_token } = useAppSelector(
+  const { isLoggedIn, images, access_token, display_name } = useAppSelector(
     (state) => state.auth
-  );
-  const { artistData, isError, isLoading, message } = useAppSelector(
-    (state) => state.artists
   );
 
   const handleLogout = () => {
@@ -85,41 +85,67 @@ function App() {
 
   useEffect(() => {
     retrieveDataFromAccessToken();
-  }, [retrieveDataFromAccessToken]);
+  }, [window.location.hash]);
 
   useEffect(() => {
     fetchAccessToken();
-  });
+  }, [window.location.hash]);
 
-  useEffect(() => {
-    if (access_token) {
-      fetchUserData();
-    }
-  }, [access_token]);
+  useEffect(
+    useCallback(() => {
+      if (access_token) {
+        fetchUserData();
+      }
+    }, [access_token]),
+    [access_token]
+  );
+
+  return (
+    <Router>
+      <MainNavbar
+        handleLogout={handleLogout}
+        imageSource={images.length !== 0 ? images[0].url! : undefined}
+      />
+      <Routes>
+        <Route
+          path={MAIN_AUTH}
+          element={!isLoggedIn ? <AuthScreen /> : <Navigate to={HOME} />}
+        />
+        <Route
+          path={AUTHENTICATE}
+          element={!isLoggedIn ? <Authenticate /> : <Navigate to={HOME} />}
+        />
+        <Route
+          path={HOME}
+          element={
+            isLoggedIn ? (
+              <Home display_name={display_name!} />
+            ) : (
+              <Navigate to={MAIN_AUTH} />
+            )
+          }
+        />
+        <Route
+          path="*"
+          element={<Error />}
+        />
+      </Routes>
+    </Router>
+  );
 
   return (
     <div>
+      <MainNavbar
+        handleLogout={handleLogout}
+        imageSource={images.length !== 0 ? images[0].url! : undefined}
+      />
       {!isLoggedIn ? (
-        <a
-          href={`${AUTH_ENDPOINT}?response_type=${RESPONSE_TYPE}&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&scope=playlist-modify-public%20playlist-modify-private`}
-        >
-          Login to spotify
-        </a>
+        <AuthScreen />
       ) : (
         <>
-          {display_name && <div>{display_name}</div>}
-          {images.length !== 0 && <img src={images[0].url || ''} />}
           {localStorage.getItem('userId') ? (
             <Button onClick={() => getUserPlaylists()}>Fetch Playlists</Button>
           ) : null}
-          <Button onClick={handleLogout}>Logout</Button>
-          <Button onClick={() => dispatch(FetchArtists(limit))}>
-            Fetch Artists
-          </Button>
-          <Button onClick={() => setLimit((prevLimit) => prevLimit + 10)}>
-            Load more
-          </Button>
-          <Button onClick={() => fetchTracks()}>Fetch Tracks</Button>
           <div>
             <label id="search_artists">Search artist</label>
             <input
@@ -187,17 +213,6 @@ function App() {
           >
             Create Playlist
           </Button>
-          {isLoading && <Spinner size={'md'} />}
-          {artistData
-            ? artistData.map((artist, i) => (
-                <div key={i}>
-                  {artist.artists.map((art) => (
-                    <div key={art.id}>{art.name}</div>
-                  ))}
-                </div>
-              ))
-            : null}
-          {isError && <div>{message}</div>}
         </>
       )}
     </div>
