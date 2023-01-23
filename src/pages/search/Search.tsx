@@ -36,6 +36,7 @@ export default function Search() {
   );
 
   const { searchedTracks } = useAppSelector((state) => state.tracks);
+  const trackLoading = useAppSelector((state) => state.tracks.isLoading);
 
   useEffect(() => {
     if (search && searchType === SearchType.artist) {
@@ -91,6 +92,7 @@ export default function Search() {
               type='text'
               textColor={colors.primary}
               borderColor={colors.primary}
+              focusBorderColor={colors.primary}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
@@ -107,17 +109,18 @@ export default function Search() {
           </InputGroup>
         </Box>
       </SimpleGrid>
-      {isLoading && (
-        <Spinner
-          size='lg'
-          justifyContent='center'
-          marginTop={20}
-          alignItems='center'
-          marginLeft='50%'
-          color={colors.primary}
-        />
-      )}
-      {searchedArtists.length !== 0
+      {isLoading ||
+        (trackLoading && (
+          <Spinner
+            size='lg'
+            justifyContent='center'
+            marginTop={20}
+            alignItems='center'
+            marginLeft='50%'
+            color={colors.primary}
+          />
+        ))}
+      {searchedArtists.length !== 0 && search
         ? searchedArtists.map((artist) => (
             <Artists
               key={artist.id}
@@ -128,7 +131,7 @@ export default function Search() {
             />
           ))
         : null}
-      {searchedTracks.length !== 0
+      {searchedTracks.length !== 0 && search
         ? searchedTracks.map((track) => (
             <Tracks
               key={track.id}

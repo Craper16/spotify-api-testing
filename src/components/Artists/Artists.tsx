@@ -7,8 +7,6 @@ import {
   Heading,
   Divider,
   CardFooter,
-  ButtonGroup,
-  Button,
 } from '@chakra-ui/react';
 import React from 'react';
 import { colors } from '../../helpers/consts';
@@ -40,7 +38,6 @@ export default function Artists({
               ? images[0].url!
               : 'https://i.scdn.co/image/ab6761610000e5eb3a21495eac7c635940a04c14'
           }
-          borderRadius='lg'
         />
         <Stack mt='6' spacing='3'>
           <Heading size='md'>{name}</Heading>
