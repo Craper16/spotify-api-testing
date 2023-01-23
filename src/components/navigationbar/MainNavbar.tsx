@@ -1,13 +1,13 @@
 import React from 'react';
-import { Box, Flex, HStack, Button, Avatar } from '@chakra-ui/react';
+import { Box, Flex, HStack, Button, Avatar, Link } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
 import { useNavigate } from 'react-router';
 import { colors } from '../../helpers/consts';
 
-type MainNavprops = {
+interface MainNavprops {
   handleLogout: () => void;
   imageSource?: string | undefined;
-};
+}
 
 const MainNavbar = ({ handleLogout, imageSource }: MainNavprops) => {
   const navigate = useNavigate();

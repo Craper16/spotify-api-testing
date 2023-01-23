@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
 import { defaultState, setUser } from './redux/auth/authSlice';
 
@@ -9,12 +9,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { GetUser } from './redux/auth/authActions';
-import { searchArtists, searchTracks } from './config/search/searchConfig';
-import {
-  createUserPlayList,
-  getUserPlaylists,
-} from './config/playlists/playlistsConfig';
-import { Button } from '@chakra-ui/react';
+import { createUserPlayList } from './config/playlists/playlistsConfig';
 import MainNavbar from './components/navigationbar/MainNavbar';
 import AuthScreen from './pages/auth/AuthScreen';
 import Error from './pages/Error';
@@ -30,14 +25,9 @@ import Authenticate from './pages/auth/Authenticate';
 import Playlists from './pages/playlists/Playlists';
 import Search from './pages/search/Search';
 import { defaultArtists } from './redux/artists/artistsSlice';
+import { defaultTracks } from './redux/tracks/tracksSlice';
 
 function App() {
-  const [searchArtist, setSearchArtist] = useState('');
-  const [searchTrack, setSearchTrack] = useState('');
-  const [playlistName, setPlaylistName] = useState('');
-  const [playlistDescription, setPlaylistDescription] = useState('');
-  const [isPlaylistPublic, setIsPlaylistPublic] = useState(false);
-
   const dispatch = useAppDispatch();
 
   const { isLoggedIn, images, access_token, display_name } = useAppSelector(
@@ -47,6 +37,7 @@ function App() {
   const handleLogout = () => {
     dispatch(defaultState());
     dispatch(defaultArtists());
+    dispatch(defaultTracks());
     localStorage.clear();
   };
 
@@ -119,23 +110,11 @@ function App() {
       <Routes>
         <Route
           path={MAIN_AUTH}
-          element={
-            !isLoggedIn ? (
-              <AuthScreen />
-            ) : (
-              <Navigate to={HOME || SEARCH || PLAYLISTS} />
-            )
-          }
+          element={!isLoggedIn ? <AuthScreen /> : <Navigate to={HOME} />}
         />
         <Route
           path={AUTHENTICATE}
-          element={
-            !isLoggedIn ? (
-              <Authenticate />
-            ) : (
-              <Navigate to={HOME || SEARCH || PLAYLISTS} />
-            )
-          }
+          element={!isLoggedIn ? <Authenticate /> : <Navigate to={HOME} />}
         />
         <Route
           path={HOME}
@@ -158,91 +137,6 @@ function App() {
         <Route path='*' element={<Error />} />
       </Routes>
     </Router>
-  );
-
-  return (
-    <div>
-      <MainNavbar
-        handleLogout={handleLogout}
-        imageSource={images.length !== 0 ? images[0].url! : undefined}
-      />
-      {!isLoggedIn ? (
-        <AuthScreen />
-      ) : (
-        <>
-          {localStorage.getItem('userId') ? (
-            <Button onClick={() => getUserPlaylists()}>Fetch Playlists</Button>
-          ) : null}
-          <div>
-            <label id='search_artists'>Search artist</label>
-            <input
-              type='text'
-              id='search_artists'
-              value={searchArtist}
-              onChange={(e) => setSearchArtist(e.target.value)}
-            />
-            <Button
-              disabled={!searchArtist}
-              onClick={() => searchArtists(searchArtist)}
-            >
-              Search
-            </Button>
-          </div>
-          <div>
-            <label id='search_track'>Search Tracks</label>
-            <input
-              type='text'
-              id='search_tracks'
-              value={searchTrack}
-              onChange={(e) => setSearchTrack(e.target.value)}
-            />
-            <Button
-              disabled={!searchTrack}
-              onClick={() => searchTracks(searchTrack)}
-            >
-              Search
-            </Button>
-          </div>
-          <label id='name'>Name</label>
-          <input
-            type='text'
-            id='name'
-            value={playlistName}
-            onChange={(e) => setPlaylistName(e.target.value)}
-          />
-          <label id='description'>Description</label>
-          <input
-            type='text'
-            id='description'
-            value={playlistDescription}
-            onChange={(e) => setPlaylistDescription(e.target.value)}
-          />
-          <Button
-            id='public'
-            onClick={() =>
-              setIsPlaylistPublic(
-                (prevIsPlaylistPublic) => !prevIsPlaylistPublic
-              )
-            }
-          >
-            {isPlaylistPublic ? 'Public' : 'Private'}
-          </Button>
-          <Button
-            type='submit'
-            onClick={() =>
-              handleCreatePlaylist({
-                name: playlistName,
-                description: playlistDescription,
-                public: isPlaylistPublic,
-              })
-            }
-            disabled={!playlistName && !playlistDescription}
-          >
-            Create Playlist
-          </Button>
-        </>
-      )}
-    </div>
   );
 }
 

@@ -21,7 +21,7 @@ export const SearchArtists = createAsyncThunk(
 
       if (response.status !== 200) {
         return thunkAPI.rejectWithValue(
-          response?.error || 'An error has occured'
+          response?.error.message || 'An error has occured'
         );
       }
 

@@ -8,9 +8,10 @@ import {
   Button,
   Box,
   Spinner,
+  Text,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
-import Artists from '../../components/navigationbar/Artists/Artists';
+import Artists from '../../components/Artists/Artists';
 import Tracks from '../../components/Tracks/Tracks';
 import { colors } from '../../helpers/consts';
 import { SearchArtists } from '../../redux/artists/artistsActions';
@@ -140,6 +141,21 @@ export default function Search() {
             />
           ))
         : null}
+      {search &&
+        (searchedTracks.length === 0 || searchedArtists.length === 0) && (
+          <Text
+            style={{
+              textAlign: 'center',
+              color: colors.primary,
+              marginTop: 23,
+            }}
+          >{`Couldnt find "${search}"`}</Text>
+        )}
+      {isError && (
+        <Text style={{ textAlign: 'center', color: 'tomato', marginTop: 23 }}>
+          {message.message}
+        </Text>
+      )}
     </>
   );
 }

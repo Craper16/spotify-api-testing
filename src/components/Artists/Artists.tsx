@@ -11,7 +11,7 @@ import {
   Button,
 } from '@chakra-ui/react';
 import React from 'react';
-import { colors } from '../../../helpers/consts';
+import { colors } from '../../helpers/consts';
 interface props {
   followers: { total: number };
   images: { height: number | null; url: string | null; width: number | null }[];
