@@ -18,9 +18,17 @@ import { Button } from '@chakra-ui/react';
 import MainNavbar from './components/navigationbar/MainNavbar';
 import AuthScreen from './pages/auth/AuthScreen';
 import Error from './pages/Error';
-import { MAIN_AUTH, AUTHENTICATE, HOME } from './helpers/pathsConsts';
+import {
+  MAIN_AUTH,
+  AUTHENTICATE,
+  HOME,
+  PLAYLISTS,
+  SEARCH,
+} from './helpers/pathsConsts';
 import Home from './pages/Home';
 import Authenticate from './pages/auth/Authenticate';
+import Playlists from './pages/playlists/Playlists';
+import Search from './pages/search/Search';
 
 function App() {
   const [searchArtist, setSearchArtist] = useState('');
@@ -124,6 +132,14 @@ function App() {
               <Navigate to={MAIN_AUTH} />
             )
           }
+        />
+        <Route
+          path={PLAYLISTS}
+          element={isLoggedIn ? <Playlists /> : <Navigate to={MAIN_AUTH} />}
+        />
+        <Route
+          path={SEARCH}
+          element={isLoggedIn ? <Search /> : <Navigate to={MAIN_AUTH} />}
         />
         <Route
           path="*"

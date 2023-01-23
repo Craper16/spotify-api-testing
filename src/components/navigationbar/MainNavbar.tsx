@@ -13,7 +13,7 @@ const MainNavbar: React.JSXElementConstructor<MainNavprops> = ({
   handleLogout,
   imageSource,
 }) => {
-  //   const navigate = useNavigate();
+    const navigate = useNavigate();
 
   const access_token: string | null = localStorage.getItem('access_token');
 
@@ -36,7 +36,7 @@ const MainNavbar: React.JSXElementConstructor<MainNavprops> = ({
               fontSize={30}
               fontWeight="bold"
               color={colors.primary}
-              //   onClick={() => navigate('/')}
+                onClick={() => navigate('/home')}
             >
               Spotify
             </Box>
