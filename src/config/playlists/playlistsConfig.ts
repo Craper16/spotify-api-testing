@@ -1,6 +1,6 @@
 import { instance } from '../config';
 
-interface createPlaylistData {
+export interface createPlaylistData {
   name: string;
   description: string;
   public: boolean;

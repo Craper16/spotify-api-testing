@@ -19,6 +19,7 @@ import {
   HOME,
   PLAYLISTS,
   SEARCH,
+  CREATE_PLAYLIST,
 } from './helpers/pathsConsts';
 import Home from './pages/Home';
 import Authenticate from './pages/auth/Authenticate';
@@ -26,6 +27,7 @@ import Playlists from './pages/playlists/Playlists';
 import Search from './pages/search/Search';
 import { defaultArtists } from './redux/artists/artistsSlice';
 import { defaultTracks } from './redux/tracks/tracksSlice';
+import CreatePlaylist from './pages/playlists/CreatePlaylist';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -131,10 +133,19 @@ function App() {
           element={isLoggedIn ? <Playlists /> : <Navigate to={MAIN_AUTH} />}
         />
         <Route
+          path={CREATE_PLAYLIST}
+          element={
+            isLoggedIn ? <CreatePlaylist /> : <Navigate to={MAIN_AUTH} />
+          }
+        />
+        <Route
           path={SEARCH}
           element={isLoggedIn ? <Search /> : <Navigate to={MAIN_AUTH} />}
         />
-        <Route path='*' element={<Error />} />
+        <Route
+          path="*"
+          element={<Error />}
+        />
       </Routes>
     </Router>
   );

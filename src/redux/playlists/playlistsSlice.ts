@@ -1,5 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { GetUserPlaylists, playlist } from './playlistsActions';
+import {
+  GetUserPlaylists,
+  playlist,
+  CreateUserPlaylist,
+} from './playlistsActions';
 
 interface playlistsModel {
   playlists: playlist[];
@@ -41,6 +45,22 @@ const playlistsSlice = createSlice({
     builder.addCase(GetUserPlaylists.rejected, (state, action) => {
       state.isError = true;
       state.isLoading = false;
+      state.message = action.error;
+    });
+    builder.addCase(CreateUserPlaylist.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+      state.message = null;
+    });
+    builder.addCase(CreateUserPlaylist.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.playlists = [action.payload, ...state.playlists];
+      state.isError = false;
+      state.message = null;
+    });
+    builder.addCase(CreateUserPlaylist.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
       state.message = action.error;
     });
   },
