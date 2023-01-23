@@ -9,34 +9,21 @@ type MainNavprops = {
   imageSource?: string | undefined;
 };
 
-const MainNavbar: React.JSXElementConstructor<MainNavprops> = ({
-  handleLogout,
-  imageSource,
-}) => {
-    const navigate = useNavigate();
+const MainNavbar = ({ handleLogout, imageSource }: MainNavprops) => {
+  const navigate = useNavigate();
 
   const access_token: string | null = localStorage.getItem('access_token');
 
   return (
     <>
-      <Box
-        bg={colors.secondary}
-        px={4}
-      >
-        <Flex
-          h={16}
-          alignItems={'center'}
-          justifyContent={'space-between'}
-        >
-          <HStack
-            spacing={8}
-            alignItems={'center'}
-          >
+      <Box bg={colors.secondary} px={4}>
+        <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+          <HStack spacing={8} alignItems={'center'}>
             <Box
               fontSize={30}
-              fontWeight="bold"
+              fontWeight='bold'
               color={colors.primary}
-                onClick={() => navigate('/home')}
+              onClick={() => navigate('/home')}
             >
               Spotify
             </Box>
@@ -54,10 +41,7 @@ const MainNavbar: React.JSXElementConstructor<MainNavprops> = ({
                 >
                   Logout
                 </Button>
-                <Avatar
-                  size="sm"
-                  src={imageSource ? imageSource : undefined}
-                />
+                <Avatar size='sm' src={imageSource ? imageSource : undefined} />
               </>
             ) : null}
           </Flex>

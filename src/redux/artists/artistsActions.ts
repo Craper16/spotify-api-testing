@@ -7,7 +7,7 @@ export interface artist {
   name: string;
   genres: string[];
   followers: { href: null | string; total: number };
-  images: { height: number | null; url: string | null; width: string | null }[];
+  images: { height: number | null; url: string | null; width: number | null }[];
   popularity: number;
   type: string;
   uri: string;

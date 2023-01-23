@@ -12,14 +12,19 @@ import {
 } from '@chakra-ui/react';
 import React from 'react';
 import { colors } from '../../../helpers/consts';
-import { artist } from '../../../redux/artists/artistsActions';
+interface props {
+  followers: { total: number };
+  images: { height: number | null; url: string | null; width: number | null }[];
+  name: string;
+  popularity: number;
+}
 
 export default function Artists({
   followers,
   images,
   name,
   popularity,
-}: artist) {
+}: props) {
   return (
     <Card
       maxW='sm'

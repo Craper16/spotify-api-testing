@@ -11,11 +11,13 @@ import {
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
 import Artists from '../../components/navigationbar/Artists/Artists';
-import { searchTracks } from '../../config/search/searchConfig';
+import Tracks from '../../components/Tracks/Tracks';
 import { colors } from '../../helpers/consts';
 import { SearchArtists } from '../../redux/artists/artistsActions';
 import { defaultArtists } from '../../redux/artists/artistsSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { SearchTracks } from '../../redux/tracks/tracksActions';
+import { defaultTracks } from '../../redux/tracks/tracksSlice';
 
 enum SearchType {
   artist = 'Artists',
@@ -32,15 +34,24 @@ export default function Search() {
     (state) => state.artists
   );
 
+  const { searchedTracks } = useAppSelector((state) => state.tracks);
+
   useEffect(() => {
-    if (search) {
+    if (search && searchType === SearchType.artist) {
       dispatch(SearchArtists(search));
     }
   }, [search, dispatch]);
 
   useEffect(() => {
+    if (search && searchType === SearchType.tracks) {
+      dispatch(SearchTracks(search));
+    }
+  }, [search]);
+
+  useEffect(() => {
     if (!search) {
       dispatch(defaultArtists());
+      dispatch(defaultTracks());
     }
   }, [search, dispatch]);
 
@@ -111,13 +122,21 @@ export default function Search() {
               key={artist.id}
               images={artist.images}
               name={artist.name}
-              external_urls={artist.external_urls}
               followers={artist.followers}
-              genres={artist.genres}
-              id={artist.id}
               popularity={artist.popularity}
-              type={artist.type}
-              uri={artist.uri}
+            />
+          ))
+        : null}
+      {searchedTracks.length !== 0
+        ? searchedTracks.map((track) => (
+            <Tracks
+              key={track.id}
+              artist={track.album.artists[0].name}
+              duration={track.duration_ms}
+              explicit={track.explicit}
+              images={track.album.images}
+              name={track.name}
+              popularity={track.popularity}
             />
           ))
         : null}
