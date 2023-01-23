@@ -1,15 +1,17 @@
-import { Grid, GridItem } from '@chakra-ui/react';
+import { Box, SimpleGrid } from '@chakra-ui/react';
 import React from 'react';
-import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import { colors } from '../helpers/consts';
 import { PLAYLISTS, SEARCH } from '../helpers/pathsConsts';
+import { useAppSelector } from '../redux/hooks';
 
 interface props {
   display_name: string;
 }
 
 export default function Home({ display_name }: props) {
+  const { isLoading } = useAppSelector((state) => state.auth);
+
   return (
     <>
       <div
@@ -21,37 +23,35 @@ export default function Home({ display_name }: props) {
           margin: 47,
         }}
       >
-        Welcome {display_name}
+        {!isLoading && `Welcome ${display_name}`}
       </div>
-      <Grid
+      <SimpleGrid
         style={{
           justifyContent: 'center',
-          margin: 'auth',
+          margin: 'auto',
           alignItems: 'center',
           textAlign: 'center',
         }}
-        gridTemplateRows={'10px 1fr 10px'}
-        gridTemplateColumns={'100px 1fr'}
-        h="200px"
-        gap="1"
+        columns={2}
+        spacing={0}
       >
-        <GridItem>
+        <Box>
           <Link
-            style={{ color: colors.primary, textAlign: 'center' }}
+            style={{ color: colors.primary, fontWeight: 'bold' }}
             to={PLAYLISTS}
           >
             PLAYLISTS
           </Link>
-        </GridItem>
-        <GridItem>
+        </Box>
+        <Box>
           <Link
-            style={{ color: colors.primary }}
+            style={{ color: colors.primary, fontWeight: 'bold' }}
             to={SEARCH}
           >
             SEARCH
           </Link>
-        </GridItem>
-      </Grid>
+        </Box>
+      </SimpleGrid>
     </>
   );
 }

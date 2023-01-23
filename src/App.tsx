@@ -29,6 +29,7 @@ import Home from './pages/Home';
 import Authenticate from './pages/auth/Authenticate';
 import Playlists from './pages/playlists/Playlists';
 import Search from './pages/search/Search';
+import { defaultArtists } from './redux/artists/artistsSlice';
 
 function App() {
   const [searchArtist, setSearchArtist] = useState('');
@@ -45,6 +46,7 @@ function App() {
 
   const handleLogout = () => {
     dispatch(defaultState());
+    dispatch(defaultArtists());
     localStorage.clear();
   };
 
@@ -117,11 +119,23 @@ function App() {
       <Routes>
         <Route
           path={MAIN_AUTH}
-          element={!isLoggedIn ? <AuthScreen /> : <Navigate to={HOME} />}
+          element={
+            !isLoggedIn ? (
+              <AuthScreen />
+            ) : (
+              <Navigate to={HOME || SEARCH || PLAYLISTS} />
+            )
+          }
         />
         <Route
           path={AUTHENTICATE}
-          element={!isLoggedIn ? <Authenticate /> : <Navigate to={HOME} />}
+          element={
+            !isLoggedIn ? (
+              <Authenticate />
+            ) : (
+              <Navigate to={HOME || SEARCH || PLAYLISTS} />
+            )
+          }
         />
         <Route
           path={HOME}
@@ -141,10 +155,7 @@ function App() {
           path={SEARCH}
           element={isLoggedIn ? <Search /> : <Navigate to={MAIN_AUTH} />}
         />
-        <Route
-          path="*"
-          element={<Error />}
-        />
+        <Route path='*' element={<Error />} />
       </Routes>
     </Router>
   );
@@ -163,10 +174,10 @@ function App() {
             <Button onClick={() => getUserPlaylists()}>Fetch Playlists</Button>
           ) : null}
           <div>
-            <label id="search_artists">Search artist</label>
+            <label id='search_artists'>Search artist</label>
             <input
-              type="text"
-              id="search_artists"
+              type='text'
+              id='search_artists'
               value={searchArtist}
               onChange={(e) => setSearchArtist(e.target.value)}
             />
@@ -178,10 +189,10 @@ function App() {
             </Button>
           </div>
           <div>
-            <label id="search_track">Search Tracks</label>
+            <label id='search_track'>Search Tracks</label>
             <input
-              type="text"
-              id="search_tracks"
+              type='text'
+              id='search_tracks'
               value={searchTrack}
               onChange={(e) => setSearchTrack(e.target.value)}
             />
@@ -192,22 +203,22 @@ function App() {
               Search
             </Button>
           </div>
-          <label id="name">Name</label>
+          <label id='name'>Name</label>
           <input
-            type="text"
-            id="name"
+            type='text'
+            id='name'
             value={playlistName}
             onChange={(e) => setPlaylistName(e.target.value)}
           />
-          <label id="description">Description</label>
+          <label id='description'>Description</label>
           <input
-            type="text"
-            id="description"
+            type='text'
+            id='description'
             value={playlistDescription}
             onChange={(e) => setPlaylistDescription(e.target.value)}
           />
           <Button
-            id="public"
+            id='public'
             onClick={() =>
               setIsPlaylistPublic(
                 (prevIsPlaylistPublic) => !prevIsPlaylistPublic
@@ -217,7 +228,7 @@ function App() {
             {isPlaylistPublic ? 'Public' : 'Private'}
           </Button>
           <Button
-            type="submit"
+            type='submit'
             onClick={() =>
               handleCreatePlaylist({
                 name: playlistName,
