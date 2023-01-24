@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { getArtist } from '../../config/artists/artistsConfig';
 import { searchArtists } from '../../config/search/searchConfig';
 
 export interface artist {
@@ -6,6 +7,7 @@ export interface artist {
   id: string;
   name: string;
   genres: string[];
+  href: string;
   followers: { href: null | string; total: number };
   images: { height: number | null; url: string | null; width: number | null }[];
   popularity: number;
@@ -26,6 +28,26 @@ export const SearchArtists = createAsyncThunk(
       }
 
       const data: artist[] = response.data.artists.items;
+      return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message || 'An error has occured');
+    }
+  }
+);
+
+export const GetArtist = createAsyncThunk(
+  'artists/artist',
+  async (artistId: string, thunkAPI) => {
+    try {
+      const response = await getArtist(artistId);
+
+      if (response.status !== 200) {
+        return thunkAPI.rejectWithValue(
+          response?.error.message || 'An error has occured'
+        );
+      }
+
+      const data: artist = response?.data;
       return data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message || 'An error has occured');

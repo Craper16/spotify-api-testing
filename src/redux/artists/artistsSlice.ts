@@ -1,8 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { artist, SearchArtists } from './artistsActions';
+import { artist, SearchArtists, GetArtist } from './artistsActions';
 
 interface ArtistsModel {
   searchedArtists: artist[];
+  artist: artist | null;
   isLoading: boolean;
   isError: boolean;
   message: any;
@@ -10,6 +11,7 @@ interface ArtistsModel {
 
 const initialState: ArtistsModel = {
   searchedArtists: [],
+  artist: null,
   isLoading: false,
   isError: false,
   message: null,
@@ -21,6 +23,7 @@ const artistsSlice = createSlice({
   reducers: {
     defaultArtists: (state) => {
       state.searchedArtists = initialState.searchedArtists;
+      state.artist = initialState.artist;
       state.isError = initialState.isError;
       state.isLoading = initialState.isLoading;
       state.message = initialState.message;
@@ -42,6 +45,22 @@ const artistsSlice = createSlice({
       state.isError = true;
       state.isLoading = false;
       state.message = action.error || action.payload;
+    });
+    builder.addCase(GetArtist.pending, (state) => {
+      state.isError = false;
+      state.isLoading = true;
+      state.message = null;
+    });
+    builder.addCase(GetArtist.fulfilled, (state, action) => {
+      state.artist = action.payload;
+      state.isLoading = false;
+      state.isError = false;
+      state.message = null;
+    });
+    builder.addCase(GetArtist.rejected, (state, action) => {
+      state.isError = true;
+      state.message = action.error || action.payload;
+      state.isLoading = false;
     });
   },
 });

@@ -11,9 +11,11 @@ import {
   Text,
 } from '@chakra-ui/react';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Artists from '../../components/Artists/Artists';
 import Tracks from '../../components/Tracks/Tracks';
 import { colors } from '../../helpers/consts';
+import { ARTIST_DETAILS_FN } from '../../helpers/pathsConsts';
 import { SearchArtists } from '../../redux/artists/artistsActions';
 import { defaultArtists } from '../../redux/artists/artistsSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -26,6 +28,7 @@ enum SearchType {
 }
 
 export default function Search() {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   const [searchType, setSearchType] = useState<SearchType>(SearchType.artist);
@@ -89,7 +92,7 @@ export default function Search() {
               children={<SearchIcon color={colors.primary} />}
             />
             <Input
-              type='text'
+              type="text"
               textColor={colors.primary}
               borderColor={colors.primary}
               focusBorderColor={colors.primary}
@@ -112,11 +115,11 @@ export default function Search() {
       {isLoading ||
         (trackLoading && (
           <Spinner
-            size='lg'
-            justifyContent='center'
+            size="lg"
+            justifyContent="center"
             marginTop={20}
-            alignItems='center'
-            marginLeft='50%'
+            alignItems="center"
+            marginLeft="50%"
             color={colors.primary}
           />
         ))}
@@ -124,6 +127,7 @@ export default function Search() {
         ? searchedArtists.map((artist) => (
             <Artists
               key={artist.id}
+              onClick={() => navigate(ARTIST_DETAILS_FN(artist.id))}
               images={artist.images}
               name={artist.name}
               followers={artist.followers}
