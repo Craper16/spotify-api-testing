@@ -16,12 +16,22 @@ const MainNavbar = ({ handleLogout, imageSource }: MainNavprops) => {
 
   return (
     <>
-      <Box bg={colors.secondary} px={4}>
-        <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
-          <HStack spacing={8} alignItems={'center'}>
+      <Box
+        bg={colors.secondary}
+        px={4}
+      >
+        <Flex
+          h={16}
+          alignItems={'center'}
+          justifyContent={'space-between'}
+        >
+          <HStack
+            spacing={8}
+            alignItems={'center'}
+          >
             <Box
               fontSize={30}
-              fontWeight='bold'
+              fontWeight="bold"
               color={colors.primary}
               onClick={() => navigate('/home')}
             >
@@ -36,12 +46,16 @@ const MainNavbar = ({ handleLogout, imageSource }: MainNavprops) => {
                   colorScheme={'whatsapp'}
                   size={'sm'}
                   mr={4}
+                  textColor={colors.secondary}
                   leftIcon={<ArrowBackIcon />}
                   onClick={handleLogout}
                 >
                   Logout
                 </Button>
-                <Avatar size='sm' src={imageSource ? imageSource : undefined} />
+                <Avatar
+                  size="sm"
+                  src={imageSource ? imageSource : undefined}
+                />
               </>
             ) : null}
           </Flex>

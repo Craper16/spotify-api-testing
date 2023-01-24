@@ -25,6 +25,20 @@ export const getUserPlaylists = async (limit: number) => {
     .catch((error) => error?.error?.message || 'An Error has occured');
 };
 
+export const getPlaylist = async (playlistId: string) => {
+  const access_token = localStorage.getItem('access_token');
+
+  return await instance
+    .get(`/playlists/${playlistId}`, {
+      headers: { Authorization: `Bearer ${access_token}` },
+    })
+    .then((response) => {
+      console.log(response);
+      return response;
+    })
+    .catch((error) => error?.error?.message || 'An Error has occured');
+};
+
 export const createUserPlayList = async (data: createPlaylistData) => {
   const access_token = localStorage.getItem('access_token');
   const userId = localStorage.getItem('userId');

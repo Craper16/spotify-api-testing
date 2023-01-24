@@ -15,6 +15,7 @@ export interface track {
     id: string;
     images: { height: number; url: string; width: number }[];
     href: string;
+    name: string;
     release_date: string;
     release_date_precision: string;
     total_tracks: number;

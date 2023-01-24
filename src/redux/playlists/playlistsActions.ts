@@ -3,7 +3,9 @@ import {
   getUserPlaylists,
   createUserPlayList,
   createPlaylistData,
+  getPlaylist,
 } from '../../config/playlists/playlistsConfig';
+import { track } from '../tracks/tracksActions';
 
 export interface playlist {
   collaborative: boolean;
@@ -22,6 +24,27 @@ export interface playlist {
   uri: string;
 }
 
+interface trackData {
+  added_at: string;
+  added_by: { external_urls: { spotify: string }; href: string; id: string };
+  is_local: boolean;
+  track: track;
+}
+
+export interface playlistData {
+  collaborative: boolean;
+  description: string;
+  external_urls: { spotify: string };
+  followers: { href: string | null; total: number };
+  href: string;
+  id: string;
+  images: { height: number | null; url: string | null; width: number | null }[];
+  name: string;
+  owner: { display_name: string; id: string };
+  public: boolean;
+  tracks: { href: string; items: trackData[]; total: number };
+}
+
 export const GetUserPlaylists = createAsyncThunk(
   'playlists/get',
   async (limit: number, thunkAPI) => {
@@ -35,6 +58,26 @@ export const GetUserPlaylists = createAsyncThunk(
       }
 
       const data: playlist[] = response.data.items;
+      return data;
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(error.message || 'An error has occured');
+    }
+  }
+);
+
+export const GetPlaylist = createAsyncThunk(
+  'playlists/playlist',
+  async (playlistId: string, thunkAPI) => {
+    try {
+      const response = await getPlaylist(playlistId);
+
+      if (response.status !== 200) {
+        return thunkAPI.rejectWithValue(
+          response?.error?.message || 'An Error has occured'
+        );
+      }
+
+      const data: playlistData = response.data;
       return data;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message || 'An error has occured');

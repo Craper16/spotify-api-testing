@@ -3,10 +3,13 @@ import {
   GetUserPlaylists,
   playlist,
   CreateUserPlaylist,
+  GetPlaylist,
+  playlistData,
 } from './playlistsActions';
 
 interface playlistsModel {
   playlists: playlist[];
+  playlist: playlistData | null;
   filteredPlaylists: playlist[];
   isLoading: boolean;
   isError: boolean;
@@ -15,6 +18,7 @@ interface playlistsModel {
 
 const initialState: playlistsModel = {
   playlists: [],
+  playlist: null,
   filteredPlaylists: [],
   isLoading: false,
   isError: false,
@@ -28,6 +32,8 @@ const playlistsSlice = createSlice({
     defaultPlaylists: (state) => {
       state.playlists = initialState.playlists;
       state.isLoading = initialState.isLoading;
+      state.filteredPlaylists = initialState.filteredPlaylists;
+      state.playlist = initialState.playlist;
       state.isError = initialState.isError;
       state.message = initialState.message;
     },
@@ -52,6 +58,22 @@ const playlistsSlice = createSlice({
     builder.addCase(GetUserPlaylists.rejected, (state, action) => {
       state.isError = true;
       state.isLoading = false;
+      state.message = action.error;
+    });
+    builder.addCase(GetPlaylist.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+      state.message = null;
+    });
+    builder.addCase(GetPlaylist.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.playlist = action.payload;
+      state.isError = false;
+      state.message = null;
+    });
+    builder.addCase(GetPlaylist.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
       state.message = action.error;
     });
     builder.addCase(CreateUserPlaylist.pending, (state) => {
