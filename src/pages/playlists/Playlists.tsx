@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Text } from '@chakra-ui/react';
 
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
@@ -6,15 +6,18 @@ import { GetUserPlaylists } from '../../redux/playlists/playlistsActions';
 import { colors } from '../../helpers/consts';
 import { useNavigate } from 'react-router';
 import { CREATE_PLAYLIST } from '../../helpers/pathsConsts';
+import PlaylistsItem from '../../components/Playlists/Playlists';
 
 export default function Playlists() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const [limit, setLimit] = useState(20);
+
   const { playlists } = useAppSelector((state) => state.playlists);
 
   const getPlaylists = useCallback(() => {
-    dispatch(GetUserPlaylists());
+    dispatch(GetUserPlaylists(limit));
   }, [dispatch]);
 
   useEffect(() => {
@@ -31,12 +34,13 @@ export default function Playlists() {
       </Button>
       {playlists.length !== 0 &&
         playlists.map((playlist) => (
-          <Text
+          <PlaylistsItem
             key={playlist.id}
-            color={colors.primary}
-          >
-            {playlist.name}
-          </Text>
+            creator={playlist.owner.display_name}
+            images={playlist.images}
+            name={playlist.name}
+            tracks={playlist.tracks.total}
+          />
         ))}
     </div>
   );

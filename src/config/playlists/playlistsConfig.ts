@@ -6,7 +6,7 @@ export interface createPlaylistData {
   public: boolean;
 }
 
-export const getUserPlaylists = async () => {
+export const getUserPlaylists = async (limit: number) => {
   const access_token = localStorage.getItem('access_token');
   const userId = localStorage.getItem('userId');
   if (!userId) {
@@ -15,6 +15,7 @@ export const getUserPlaylists = async () => {
 
   return await instance
     .get(`/users/${userId}/playlists`, {
+      params: { limit: limit },
       headers: { Authorization: `Bearer ${access_token}` },
     })
     .then((response) => {

@@ -24,9 +24,9 @@ export interface playlist {
 
 export const GetUserPlaylists = createAsyncThunk(
   'playlists/get',
-  async (undefined, thunkAPI) => {
+  async (limit: number, thunkAPI) => {
     try {
-      const response = await getUserPlaylists();
+      const response = await getUserPlaylists(limit);
 
       if (response.status !== 200) {
         return thunkAPI.rejectWithValue(

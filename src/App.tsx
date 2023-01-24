@@ -28,6 +28,7 @@ import Search from './pages/search/Search';
 import { defaultArtists } from './redux/artists/artistsSlice';
 import { defaultTracks } from './redux/tracks/tracksSlice';
 import CreatePlaylist from './pages/playlists/CreatePlaylist';
+import { defaultPlaylists } from './redux/playlists/playlistsSlice';
 
 function App() {
   const dispatch = useAppDispatch();
@@ -40,6 +41,7 @@ function App() {
     dispatch(defaultState());
     dispatch(defaultArtists());
     dispatch(defaultTracks());
+    dispatch(defaultPlaylists());
     localStorage.clear();
   };
 
@@ -142,10 +144,7 @@ function App() {
           path={SEARCH}
           element={isLoggedIn ? <Search /> : <Navigate to={MAIN_AUTH} />}
         />
-        <Route
-          path="*"
-          element={<Error />}
-        />
+        <Route path='*' element={<Error />} />
       </Routes>
     </Router>
   );
