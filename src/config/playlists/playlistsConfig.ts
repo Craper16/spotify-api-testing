@@ -6,15 +6,10 @@ export interface createPlaylistData {
   public: boolean;
 }
 
-export const getUserPlaylists = async (limit: number) => {
+export const getCurrentUserPlaylists = async (limit: number) => {
   const access_token = localStorage.getItem('access_token');
-  const userId = localStorage.getItem('userId');
-  if (!userId) {
-    return console.log('Could not fetch userId');
-  }
-
   return await instance
-    .get(`/users/${userId}/playlists`, {
+    .get(`/me/playlists`, {
       params: { limit: limit },
       headers: { Authorization: `Bearer ${access_token}` },
     })

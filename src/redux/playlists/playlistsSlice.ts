@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
-  GetUserPlaylists,
+  GetCurrentUserPlaylists,
   playlist,
   CreateUserPlaylist,
   GetPlaylist,
@@ -44,18 +44,18 @@ const playlistsSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    builder.addCase(GetUserPlaylists.pending, (state, action) => {
+    builder.addCase(GetCurrentUserPlaylists.pending, (state, action) => {
       state.isLoading = true;
       state.isError = false;
       state.message = null;
     });
-    builder.addCase(GetUserPlaylists.fulfilled, (state, action) => {
+    builder.addCase(GetCurrentUserPlaylists.fulfilled, (state, action) => {
       state.playlists = [...action.payload];
       state.isLoading = false;
       state.isError = false;
       state.message = null;
     });
-    builder.addCase(GetUserPlaylists.rejected, (state, action) => {
+    builder.addCase(GetCurrentUserPlaylists.rejected, (state, action) => {
       state.isError = true;
       state.isLoading = false;
       state.message = action.error;

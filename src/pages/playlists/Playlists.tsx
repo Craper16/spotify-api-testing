@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { GetUserPlaylists } from '../../redux/playlists/playlistsActions';
+import { GetCurrentUserPlaylists } from '../../redux/playlists/playlistsActions';
 import { colors } from '../../helpers/consts';
 import { useNavigate } from 'react-router';
 import { filterPlaylists } from '../../redux/playlists/playlistsSlice';
@@ -38,7 +38,7 @@ export default function Playlists() {
 
   const getPlaylists = useCallback(() => {
     console.log('isRunning');
-    dispatch(GetUserPlaylists(50));
+    dispatch(GetCurrentUserPlaylists(50));
   }, [dispatch]);
 
   useEffect(() => {

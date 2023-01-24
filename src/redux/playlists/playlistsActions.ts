@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import {
-  getUserPlaylists,
+  getCurrentUserPlaylists,
   createUserPlayList,
   createPlaylistData,
   getPlaylist,
@@ -45,11 +45,11 @@ export interface playlistData {
   tracks: { href: string; items: trackData[]; total: number };
 }
 
-export const GetUserPlaylists = createAsyncThunk(
+export const GetCurrentUserPlaylists = createAsyncThunk(
   'playlists/get',
   async (limit: number, thunkAPI) => {
     try {
-      const response = await getUserPlaylists(limit);
+      const response = await getCurrentUserPlaylists(limit);
 
       if (response.status !== 200) {
         return thunkAPI.rejectWithValue(
