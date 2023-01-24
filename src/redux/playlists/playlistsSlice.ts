@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   GetUserPlaylists,
   playlist,
@@ -7,6 +7,7 @@ import {
 
 interface playlistsModel {
   playlists: playlist[];
+  filteredPlaylists: playlist[];
   isLoading: boolean;
   isError: boolean;
   message: any;
@@ -14,6 +15,7 @@ interface playlistsModel {
 
 const initialState: playlistsModel = {
   playlists: [],
+  filteredPlaylists: [],
   isLoading: false,
   isError: false,
   message: null,
@@ -28,6 +30,11 @@ const playlistsSlice = createSlice({
       state.isLoading = initialState.isLoading;
       state.isError = initialState.isError;
       state.message = initialState.message;
+    },
+    filterPlaylists: (state, action: PayloadAction<string>) => {
+      state.filteredPlaylists = state.playlists.filter((playlist) =>
+        playlist.name.includes(action.payload)
+      );
     },
   },
   extraReducers(builder) {
@@ -66,6 +73,6 @@ const playlistsSlice = createSlice({
   },
 });
 
-export const { defaultPlaylists } = playlistsSlice.actions;
+export const { defaultPlaylists, filterPlaylists } = playlistsSlice.actions;
 
 export default playlistsSlice.reducer;

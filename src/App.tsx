@@ -9,7 +9,6 @@ import {
   Navigate,
 } from 'react-router-dom';
 import { GetUser } from './redux/auth/authActions';
-import { createUserPlayList } from './config/playlists/playlistsConfig';
 import MainNavbar from './components/navigationbar/MainNavbar';
 import AuthScreen from './pages/auth/AuthScreen';
 import Error from './pages/Error';
@@ -51,18 +50,6 @@ function App() {
       dispatch(GetUser());
     }
   }, [dispatch]);
-
-  const handleCreatePlaylist = (body: {
-    name: string;
-    description: string;
-    public: boolean;
-  }) => {
-    createUserPlayList({
-      name: body.name,
-      description: body.description,
-      public: body.public,
-    });
-  };
 
   const retrieveDataFromAccessToken = useCallback(async () => {
     const access_token = localStorage.getItem('access_token');
