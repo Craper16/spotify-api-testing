@@ -170,7 +170,7 @@ export default function Tracks({
                           <Box>
                             <Text>Playlist</Text>
                           </Box>
-                          <Box># Tracks</Box>
+                          <Box>Creator</Box>
                         </SimpleGrid>
                         {playlists.map((playlist) => (
                           <div
@@ -215,7 +215,7 @@ export default function Tracks({
                                       : colors.primary
                                   }
                                 >
-                                  {playlist.tracks.total}
+                                  {playlist.owner.display_name}
                                 </Text>
                               </Box>
                             </SimpleGrid>
