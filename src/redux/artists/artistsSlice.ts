@@ -1,9 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { artist, SearchArtists, GetArtist } from './artistsActions';
+import {
+  artist,
+  SearchArtists,
+  GetArtist,
+  artistTopTrack,
+  artistAlbums,
+} from './artistsActions';
 
 interface ArtistsModel {
   searchedArtists: artist[];
   artist: artist | null;
+  artistTopTracks: artistTopTrack[];
+  artistRelatedArtists: artist[];
+  artistAlbums: artistAlbums[];
   isLoading: boolean;
   isError: boolean;
   message: any;
@@ -12,6 +21,9 @@ interface ArtistsModel {
 const initialState: ArtistsModel = {
   searchedArtists: [],
   artist: null,
+  artistTopTracks: [],
+  artistRelatedArtists: [],
+  artistAlbums: [],
   isLoading: false,
   isError: false,
   message: null,
@@ -24,6 +36,9 @@ const artistsSlice = createSlice({
     defaultArtists: (state) => {
       state.searchedArtists = initialState.searchedArtists;
       state.artist = initialState.artist;
+      state.artistTopTracks = initialState.artistTopTracks;
+      state.artistAlbums = initialState.artistAlbums;
+      state.artistRelatedArtists = initialState.artistRelatedArtists;
       state.isError = initialState.isError;
       state.isLoading = initialState.isLoading;
       state.message = initialState.message;
