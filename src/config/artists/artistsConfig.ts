@@ -18,7 +18,7 @@ export const getArtistAlbums = async (artistId: string) => {
   const access_token = localStorage.getItem('access_token');
 
   return await instance
-    .get(`/artists/${artistId}/albums`, {
+    .get(`/artists/${artistId}/albums?limit=50`, {
       headers: { Authorization: `Bearer ${access_token}` },
     })
     .then((response) => {
