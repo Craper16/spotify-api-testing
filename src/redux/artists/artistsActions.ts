@@ -41,6 +41,7 @@ export interface artistTopTrack {
     type: string;
     uri: string;
   }[];
+  id: string;
   disc_number: number;
   duration_ms: number;
   explicit: boolean;

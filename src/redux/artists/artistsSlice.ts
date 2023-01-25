@@ -5,6 +5,9 @@ import {
   GetArtist,
   artistTopTrack,
   artistAlbums,
+  GetArtistAlbums,
+  GetArtistTopTracks,
+  GetArtistRelatedArtists,
 } from './artistsActions';
 
 interface ArtistsModel {
@@ -76,6 +79,54 @@ const artistsSlice = createSlice({
       state.isError = true;
       state.message = action.error || action.payload;
       state.isLoading = false;
+    });
+    builder.addCase(GetArtistAlbums.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+      state.message = null;
+    });
+    builder.addCase(GetArtistAlbums.fulfilled, (state, action) => {
+      state.artistAlbums = [...action.payload];
+      state.isLoading = false;
+      state.isError = false;
+      state.message = null;
+    });
+    builder.addCase(GetArtistAlbums.rejected, (state, action) => {
+      state.isError = true;
+      state.isLoading = false;
+      state.message = action.error || action.payload;
+    });
+    builder.addCase(GetArtistTopTracks.pending, (state) => {
+      state.isError = false;
+      state.isLoading = true;
+      state.message = null;
+    });
+    builder.addCase(GetArtistTopTracks.fulfilled, (state, action) => {
+      state.artistTopTracks = [...action.payload];
+      state.isLoading = false;
+      state.isError = false;
+      state.message = null;
+    });
+    builder.addCase(GetArtistTopTracks.rejected, (state, action) => {
+      state.isError = true;
+      state.message = action.error || action.payload;
+      state.isLoading = false;
+    });
+    builder.addCase(GetArtistRelatedArtists.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+      state.message = null;
+    });
+    builder.addCase(GetArtistRelatedArtists.fulfilled, (state, action) => {
+      state.artistRelatedArtists = [...action.payload];
+      state.isLoading = false;
+      state.isError = false;
+      state.message = null;
+    });
+    builder.addCase(GetArtistRelatedArtists.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.error || action.payload;
     });
   },
 });
