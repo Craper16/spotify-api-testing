@@ -64,7 +64,11 @@ export const addTrackToPlaylist = async (
   const access_token = localStorage.getItem('access_token');
 
   return await instance
-    .post(`/playlists/${playlistId}/tracks?uris=spotify%3ATrack%3${trackId}`)
+    .post(
+      `/playlists/${playlistId}/tracks?uris=spotify%3Atrack%3A${trackId}`,
+      trackId,
+      { headers: { Authorization: `Bearer ${access_token}` } }
+    )
     .then((response) => {
       console.log(response);
       return response;

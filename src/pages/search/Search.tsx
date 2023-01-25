@@ -39,6 +39,8 @@ export default function Search() {
     (state) => state.artists
   );
 
+  const { playlists } = useAppSelector((state) => state.playlists);
+
   const { searchedTracks } = useAppSelector((state) => state.tracks);
   const trackLoading = useAppSelector((state) => state.tracks.isLoading);
 
@@ -145,6 +147,9 @@ export default function Search() {
               onGoToArtist={() =>
                 navigate(ARTIST_DETAILS_FN(track.artists[0].id))
               }
+              onPlaylistSelect={() => {}}
+              trackId={track.id}
+              playlists={playlists}
               artist={track.album.artists[0].name}
               duration={track.duration_ms}
               explicit={track.explicit}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Card,
   CardBody,
@@ -15,9 +15,22 @@ import {
   Button,
   SimpleGrid,
   Box,
+  ModalFooter,
+  Modal,
+  ModalOverlay,
+  useDisclosure,
+  ModalBody,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  Alert,
+  Toast,
+  useToast,
 } from '@chakra-ui/react';
 import { colors } from '../../helpers/consts';
-import { ChevronDownIcon, HamburgerIcon } from '@chakra-ui/icons';
+import { HamburgerIcon } from '@chakra-ui/icons';
+import { playlist } from '../../redux/playlists/playlistsActions';
+import { addTrackToPlaylist } from '../../config/playlists/playlistsConfig';
 
 interface props {
   name: string;
@@ -27,6 +40,8 @@ interface props {
   popularity: number;
   explicit: boolean;
   onGoToArtist: () => void;
+  playlists: playlist[];
+  trackId: string;
 }
 
 export const millisToMinutesAndSeconds = (millis: number) => {
@@ -43,7 +58,35 @@ export default function Tracks({
   duration,
   explicit,
   onGoToArtist,
+  playlists,
+  trackId,
 }: props) {
+  const toast = useToast();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const [selectedPlaylistName, setSelectedPlaylistName] = useState('');
+  const [playlistId, setPlaylistId] = useState('');
+
+  const handleAddToPlaylist = (playlistName: string) => {
+    if (playlistId && trackId) {
+      addTrackToPlaylist(playlistId, trackId);
+      return toast({
+        title: 'Success',
+        description: `Added ${name} to ${playlistName}`,
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+      });
+    }
+    return toast({
+      title: 'Please enter a playlist',
+      description: 'You must select a playlist',
+      status: 'error',
+      duration: 5000,
+      isClosable: true,
+    });
+  };
+
   return (
     <Card
       maxW="sm"
@@ -96,9 +139,112 @@ export default function Tracks({
               <MenuList backgroundColor={colors.secondary}>
                 <MenuItem
                   backgroundColor={colors.secondary}
-                  as={Button}
+                  justifyContent="center"
                 >
-                  Add to playlist
+                  <Button
+                    onClick={onOpen}
+                    variant="ghost"
+                  >
+                    Add to playlist
+                  </Button>
+                  <Modal
+                    isCentered
+                    onClose={onClose}
+                    isOpen={isOpen}
+                    motionPreset="slideInRight"
+                  >
+                    <ModalOverlay />
+                    <ModalContent>
+                      <ModalHeader
+                        color={colors.secondary}
+                        backgroundColor={colors.primary}
+                      >
+                        Add to playlist
+                      </ModalHeader>
+                      <ModalCloseButton />
+                      <ModalBody backgroundColor={colors.secondary}>
+                        <SimpleGrid
+                          columns={2}
+                          marginBottom={4}
+                        >
+                          <Box>
+                            <Text>Playlist</Text>
+                          </Box>
+                          <Box># Tracks</Box>
+                        </SimpleGrid>
+                        {playlists.map((playlist) => (
+                          <div
+                            key={playlist.id}
+                            onClick={() => {
+                              setPlaylistId(playlist.id);
+                              setSelectedPlaylistName(playlist.name);
+                            }}
+                          >
+                            <SimpleGrid
+                              columns={2}
+                              marginBottom={2}
+                            >
+                              <Box
+                                backgroundColor={
+                                  playlistId === playlist.id
+                                    ? colors.primary
+                                    : colors.secondary
+                                }
+                              >
+                                <Text
+                                  color={
+                                    playlistId === playlist.id
+                                      ? colors.secondary
+                                      : colors.primary
+                                  }
+                                >
+                                  {playlist.name}
+                                </Text>
+                              </Box>
+                              <Box
+                                backgroundColor={
+                                  playlistId === playlist.id
+                                    ? colors.primary
+                                    : colors.secondary
+                                }
+                              >
+                                <Text
+                                  color={
+                                    playlistId === playlist.id
+                                      ? colors.secondary
+                                      : colors.primary
+                                  }
+                                >
+                                  {playlist.tracks.total}
+                                </Text>
+                              </Box>
+                            </SimpleGrid>
+                            <Divider />
+                          </div>
+                        ))}
+                      </ModalBody>
+                      <ModalFooter backgroundColor={colors.secondary}>
+                        <Button
+                          variant="ghost"
+                          color={colors.primary}
+                          onClick={() => {
+                            handleAddToPlaylist(selectedPlaylistName);
+                            setPlaylistId('');
+                            setSelectedPlaylistName('');
+                          }}
+                        >
+                          Add
+                        </Button>
+                        <Button
+                          colorScheme="blackAlpha"
+                          mr={3}
+                          onClick={onClose}
+                        >
+                          Close
+                        </Button>
+                      </ModalFooter>
+                    </ModalContent>
+                  </Modal>
                 </MenuItem>
                 <MenuItem
                   backgroundColor={colors.secondary}
