@@ -23,8 +23,6 @@ import {
   ModalContent,
   ModalHeader,
   ModalCloseButton,
-  Alert,
-  Toast,
   useToast,
 } from '@chakra-ui/react';
 import { colors } from '../../helpers/consts';
@@ -136,24 +134,15 @@ export default function Tracks({
           </Box>
           <Box>
             <Menu>
-              <MenuButton
-                backgroundColor={colors.primary}
-                as={Button}
-                rightIcon={<HamburgerIcon />}
-              >
-                More
-              </MenuButton>
+              <MenuButton backgroundColor={colors.primary}>More</MenuButton>
               <MenuList backgroundColor={colors.secondary}>
                 <MenuItem
                   backgroundColor={colors.secondary}
                   justifyContent="center"
+                  as={Button}
+                  onClick={onOpen}
                 >
-                  <Button
-                    onClick={onOpen}
-                    variant="ghost"
-                  >
-                    Add to playlist
-                  </Button>
+                  Add to playlist
                   <Modal
                     isCentered
                     onClose={onClose}
