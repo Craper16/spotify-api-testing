@@ -139,6 +139,9 @@ export default function Search() {
         ? searchedTracks.map((track) => (
             <Tracks
               key={track.id}
+              onGoToArtist={() =>
+                navigate(ARTIST_DETAILS_FN(track.artists[0].id))
+              }
               artist={track.album.artists[0].name}
               duration={track.duration_ms}
               explicit={track.explicit}

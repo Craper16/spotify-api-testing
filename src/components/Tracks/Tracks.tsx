@@ -8,8 +8,16 @@ import {
   Heading,
   Divider,
   CardFooter,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Button,
+  SimpleGrid,
+  Box,
 } from '@chakra-ui/react';
 import { colors } from '../../helpers/consts';
+import { ChevronDownIcon, HamburgerIcon } from '@chakra-ui/icons';
 
 interface props {
   name: string;
@@ -18,6 +26,7 @@ interface props {
   duration: number;
   popularity: number;
   explicit: boolean;
+  onGoToArtist: () => void;
 }
 
 export const millisToMinutesAndSeconds = (millis: number) => {
@@ -33,6 +42,7 @@ export default function Tracks({
   popularity,
   duration,
   explicit,
+  onGoToArtist,
 }: props) {
   return (
     <Card
@@ -66,7 +76,41 @@ export default function Tracks({
       </CardBody>
       <Divider />
       <CardFooter>
-        <Text color={colors.secondary}>{`Popularity: ${popularity}`}</Text>
+        <SimpleGrid
+          margin="auto"
+          columns={2}
+          spacing={20}
+        >
+          <Box>
+            <Text color={colors.secondary}>{`Popularity: ${popularity}`}</Text>
+          </Box>
+          <Box>
+            <Menu>
+              <MenuButton
+                backgroundColor={colors.primary}
+                as={Button}
+                rightIcon={<HamburgerIcon />}
+              >
+                More
+              </MenuButton>
+              <MenuList backgroundColor={colors.secondary}>
+                <MenuItem
+                  backgroundColor={colors.secondary}
+                  as={Button}
+                >
+                  Add to playlist
+                </MenuItem>
+                <MenuItem
+                  backgroundColor={colors.secondary}
+                  as={Button}
+                  onClick={onGoToArtist}
+                >
+                  Go to artist
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </Box>
+        </SimpleGrid>
       </CardFooter>
     </Card>
   );
