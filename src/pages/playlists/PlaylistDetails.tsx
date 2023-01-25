@@ -140,8 +140,8 @@ export default function PlaylistDetails() {
                   </SimpleGrid>
                 </ListItem>
               )}
-              {playlist?.tracks.items.map((track) => (
-                <ListItem key={track.track.id}>
+              {playlist?.tracks.items.map((track, i) => (
+                <ListItem key={i}>
                   <SimpleGrid columns={6}>
                     <Box>
                       {track.track.album.images.length !== 0 && (

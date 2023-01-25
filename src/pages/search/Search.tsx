@@ -19,6 +19,7 @@ import { ARTIST_DETAILS_FN } from '../../helpers/pathsConsts';
 import { SearchArtists } from '../../redux/artists/artistsActions';
 import { defaultArtists } from '../../redux/artists/artistsSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { GetCurrentUserPlaylists } from '../../redux/playlists/playlistsActions';
 import { SearchTracks } from '../../redux/tracks/tracksActions';
 import { defaultTracks } from '../../redux/tracks/tracksSlice';
 
@@ -44,12 +45,14 @@ export default function Search() {
   useEffect(() => {
     if (search && searchType === SearchType.artist) {
       dispatch(SearchArtists(search));
+      dispatch(GetCurrentUserPlaylists(50));
     }
   }, [search, dispatch]);
 
   useEffect(() => {
     if (search && searchType === SearchType.tracks) {
       dispatch(SearchTracks(search));
+      dispatch(GetCurrentUserPlaylists(50));
     }
   }, [search]);
 

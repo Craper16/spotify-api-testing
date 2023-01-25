@@ -56,3 +56,18 @@ export const createUserPlayList = async (data: createPlaylistData) => {
     })
     .catch((error) => error?.error?.message || 'An Error has occured');
 };
+
+export const addTrackToPlaylist = async (
+  playlistId: string,
+  trackId: string
+) => {
+  const access_token = localStorage.getItem('access_token');
+
+  return await instance
+    .post(`/playlists/${playlistId}/tracks?uris=spotify%3ATrack%3${trackId}`)
+    .then((response) => {
+      console.log(response);
+      return response;
+    })
+    .catch((error) => error?.error?.message || 'An error has occured');
+};
