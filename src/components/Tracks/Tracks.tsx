@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardBody,
@@ -66,6 +66,13 @@ export default function Tracks({
 
   const [selectedPlaylistName, setSelectedPlaylistName] = useState('');
   const [playlistId, setPlaylistId] = useState('');
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedPlaylistName('');
+      setPlaylistId('');
+    }
+  }, [isOpen]);
 
   const handleAddToPlaylist = (playlistName: string) => {
     if (playlistId && trackId) {
