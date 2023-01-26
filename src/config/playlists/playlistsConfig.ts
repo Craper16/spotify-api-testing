@@ -6,6 +6,11 @@ export interface createPlaylistData {
   public: boolean;
 }
 
+export interface trackToDelete {
+  uri: string;
+  positions: number[];
+}
+
 export const getCurrentUserPlaylists = async (limit: number) => {
   const access_token = localStorage.getItem('access_token');
   return await instance
@@ -62,4 +67,19 @@ export const addTrackToPlaylist = async (
     )
     .then((response) => response)
     .catch((error) => error || 'An error has occured');
+};
+
+export const removeTracksFromPlaylist = async (
+  playlistId: string,
+  data: trackToDelete[]
+) => {
+  const access_token = localStorage.getItem('access_token');
+
+  return await instance
+    .delete(`/playlists/${playlistId}/tracks`, {
+      headers: { Authorization: `Bearer ${access_token}` },
+      data: { tracks: data },
+    })
+    .then((response) => response)
+    .catch((error) => error || 'An Error has occured');
 };
