@@ -14,8 +14,6 @@ export const GetUser = createAsyncThunk(
     try {
       const response = await getUser();
 
-      console.log(response);
-
       if (response.status !== 200) {
         return thunkAPI.rejectWithValue(
           response?.response?.data?.error?.message || 'An error has occured'

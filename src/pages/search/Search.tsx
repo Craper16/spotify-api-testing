@@ -99,7 +99,7 @@ export default function Search() {
               children={<SearchIcon color={colors.primary} />}
             />
             <Input
-              type='text'
+              type="text"
               textColor={colors.primary}
               borderColor={colors.primary}
               focusBorderColor={colors.primary}
@@ -122,11 +122,11 @@ export default function Search() {
       {isLoading ||
         (trackLoading && (
           <Spinner
-            size='lg'
-            justifyContent='center'
+            size="lg"
+            justifyContent="center"
             marginTop={20}
-            alignItems='center'
-            marginLeft='50%'
+            alignItems="center"
+            marginLeft="50%"
             color={colors.primary}
           />
         ))}
@@ -161,7 +161,9 @@ export default function Search() {
           ))
         : null}
       {search &&
-        (searchedTracks.length === 0 || searchedArtists.length === 0) && (
+        ((searchedTracks.length === 0 && searchType === SearchType.tracks) ||
+          (searchedArtists.length === 0 &&
+            searchType === SearchType.artist)) && (
           <Text
             style={{
               textAlign: 'center',
