@@ -5,6 +5,7 @@ import {
   CreateUserPlaylist,
   GetPlaylist,
   playlistData,
+  RemoveTrackFromPlaylist,
 } from './playlistsActions';
 
 interface playlistsModel {
@@ -39,6 +40,9 @@ const playlistsSlice = createSlice({
       state.playlist = initialState.playlist;
       state.isError = initialState.isError;
       state.message = initialState.message;
+    },
+    resetIsSuccess: (state) => {
+      state.isSuccess = initialState.isSuccess;
     },
     filterPlaylists: (state, action: PayloadAction<string>) => {
       state.filteredPlaylists = state.playlists.filter((playlist) =>
@@ -87,7 +91,7 @@ const playlistsSlice = createSlice({
     });
     builder.addCase(CreateUserPlaylist.fulfilled, (state, action) => {
       state.isLoading = false;
-      state.playlists = [action.payload, ...state.playlists];
+      state.playlists = [action.payload!, ...state.playlists];
       state.isSuccess = true;
       state.isError = false;
       state.message = null;
@@ -98,9 +102,23 @@ const playlistsSlice = createSlice({
       state.isError = true;
       state.message = action.payload || action.error;
     });
+    builder.addCase(RemoveTrackFromPlaylist.pending, (state) => {
+      state.isError = false;
+      state.message = null;
+    });
+    builder.addCase(RemoveTrackFromPlaylist.fulfilled, (state) => {
+      state.isError = false;
+      state.message = null;
+      state.isSuccess = true;
+    });
+    builder.addCase(RemoveTrackFromPlaylist.rejected, (state, action) => {
+      state.isError = true;
+      state.message = action.payload || action.error;
+    });
   },
 });
 
-export const { defaultPlaylists, filterPlaylists } = playlistsSlice.actions;
+export const { defaultPlaylists, filterPlaylists, resetIsSuccess } =
+  playlistsSlice.actions;
 
 export default playlistsSlice.reducer;

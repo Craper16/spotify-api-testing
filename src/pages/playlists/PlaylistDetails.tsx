@@ -1,9 +1,8 @@
 import {
   ArrowBackIcon,
   CalendarIcon,
-  CheckIcon,
   DeleteIcon,
-  MinusIcon,
+  DragHandleIcon,
   TimeIcon,
 } from '@chakra-ui/icons';
 import {
@@ -15,36 +14,41 @@ import {
   List,
   ListItem,
   Divider,
-  IconButton,
   Button,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { millisToMinutesAndSeconds } from '../../components/Tracks/Tracks';
-import { trackToDelete } from '../../config/playlists/playlistsConfig';
+import { removeTracksFromPlaylist } from '../../config/playlists/playlistsConfig';
 import { colors } from '../../helpers/consts';
-import { PLAYLISTS } from '../../helpers/pathsConsts';
+import { ARTIST_DETAILS_FN, PLAYLISTS } from '../../helpers/pathsConsts';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import { GetPlaylist } from '../../redux/playlists/playlistsActions';
+import {
+  GetPlaylist,
+  RemoveTrackFromPlaylist,
+} from '../../redux/playlists/playlistsActions';
+import { resetIsSuccess } from '../../redux/playlists/playlistsSlice';
 
 export default function PlaylistDetails() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { playlistId } = useParams();
 
-  const [isInEditMode, setIsInEditMode] = useState(false);
-
-  const [tracksToDelete, setTracksToDelete] = useState<trackToDelete[]>([]);
-
-  const { playlist, isLoading, isError, message } = useAppSelector(
+  const { playlist, isLoading, isError, message, isSuccess } = useAppSelector(
     (state) => state.playlists
   );
 
   useEffect(() => {
-    if (playlistId) {
-      dispatch(GetPlaylist(playlistId));
+    if (playlistId || isSuccess) {
+      dispatch(GetPlaylist(playlistId!));
+      dispatch(resetIsSuccess());
     }
-  }, [playlistId, dispatch]);
+  }, [playlistId, dispatch, isSuccess]);
 
   if (isError) {
     return (
@@ -114,229 +118,149 @@ export default function PlaylistDetails() {
                   }
                 />
               </Box>
-              <Button
-                variant="ghost"
-                backgroundColor={colors.primary}
-                onClick={() =>
-                  setIsInEditMode((prevIsInEditMode) => !prevIsInEditMode)
-                }
-              >
-                {isInEditMode ? 'Cancel' : 'Edit'}
-              </Button>
-              {isInEditMode && (
-                <Button
-                  variant="ghost"
-                  backgroundColor={colors.primary}
-                  leftIcon={<CheckIcon />}
-                >
-                  Save
-                </Button>
-              )}
             </SimpleGrid>
-            {isInEditMode ? (
-              <List
-                marginTop={24}
-                alignItems="center"
-                textAlign="center"
-              >
-                {playlist?.tracks.items.length === 0 ? (
-                  <Text
-                    color={colors.primary}
-                    textAlign="center"
-                    fontWeight="bold"
-                  >
-                    Add to your playlist
-                  </Text>
-                ) : (
-                  <ListItem>
-                    <SimpleGrid columns={7}>
-                      <Box>
-                        <Text></Text>
-                      </Box>
-                      <Box>
-                        <Text>TITLE</Text>
-                      </Box>
-                      <Box>
-                        <Text>ARTIST</Text>
-                      </Box>
-                      <Box>
-                        <Text>ALBUM</Text>
-                      </Box>
-                      <Box>
-                        <CalendarIcon />
-                      </Box>
-                      <Box>
-                        <TimeIcon />
-                      </Box>
-                      <Box>
-                        <DeleteIcon />
-                      </Box>
-                    </SimpleGrid>
-                  </ListItem>
-                )}
-                {playlist?.tracks.items.map((track, i) => (
-                  <ListItem key={i}>
-                    <SimpleGrid columns={7}>
-                      <Box>
-                        {track.track.album.images.length !== 0 && (
-                          <Image
-                            marginLeft={2}
-                            boxSize="50px"
-                            src={track.track.album.images[0].url}
-                          />
-                        )}
-                      </Box>
-                      <Box>
-                        <Text
-                          color="white"
-                          marginTop={3}
-                        >
-                          {track.track.explicit
-                            ? `E ${track.track.name}`
-                            : `${track.track.name}`}
-                        </Text>
-                      </Box>
-                      <Box>
-                        <Text
-                          color="white"
-                          marginTop={3}
-                        >
-                          {track.track.artists[0].name}
-                        </Text>
-                      </Box>
-                      <Box>
-                        <Text
-                          color="white"
-                          marginTop={3}
-                        >
-                          {track.track.album.name}
-                        </Text>
-                      </Box>
-                      <Box>
-                        <Text
-                          color="white"
-                          marginTop={3}
-                        >
-                          {track.track.album.release_date}
-                        </Text>
-                      </Box>
-                      <Box>
-                        <Text
-                          color="white"
-                          marginTop={3}
-                        >
-                          {millisToMinutesAndSeconds(track.track.duration_ms)}
-                        </Text>
-                      </Box>
-                      <Box>
-                        <MinusIcon
-                          marginTop={4}
-                          color="tomato"
+            <List
+              marginTop={24}
+              alignItems="center"
+              textAlign="center"
+            >
+              {playlist?.tracks.items.length === 0 ? (
+                <Text
+                  color={colors.primary}
+                  textAlign="center"
+                  fontWeight="bold"
+                >
+                  Add to your playlist
+                </Text>
+              ) : (
+                <ListItem>
+                  <SimpleGrid columns={7}>
+                    <Box>
+                      <Text></Text>
+                    </Box>
+                    <Box>
+                      <Text>TITLE</Text>
+                    </Box>
+                    <Box>
+                      <Text>ARTIST</Text>
+                    </Box>
+                    <Box>
+                      <Text>ALBUM</Text>
+                    </Box>
+                    <Box>
+                      <CalendarIcon />
+                    </Box>
+                    <Box>
+                      <TimeIcon />
+                    </Box>
+                    <Box>
+                      <Text></Text>
+                    </Box>
+                  </SimpleGrid>
+                </ListItem>
+              )}
+              {playlist?.tracks.items.map((track, i) => (
+                <ListItem key={i}>
+                  <SimpleGrid columns={7}>
+                    <Box>
+                      {track.track.album.images.length !== 0 && (
+                        <Image
+                          marginLeft={2}
+                          boxSize="50px"
+                          src={track.track.album.images[0].url}
                         />
-                      </Box>
-                    </SimpleGrid>
-                    <Divider />
-                  </ListItem>
-                ))}
-              </List>
-            ) : (
-              <List
-                marginTop={24}
-                alignItems="center"
-                textAlign="center"
-              >
-                {playlist?.tracks.items.length === 0 ? (
-                  <Text
-                    color={colors.primary}
-                    textAlign="center"
-                    fontWeight="bold"
-                  >
-                    Add to your playlist
-                  </Text>
-                ) : (
-                  <ListItem>
-                    <SimpleGrid columns={6}>
-                      <Box>
-                        <Text></Text>
-                      </Box>
-                      <Box>
-                        <Text>TITLE</Text>
-                      </Box>
-                      <Box>
-                        <Text>ARTIST</Text>
-                      </Box>
-                      <Box>
-                        <Text>ALBUM</Text>
-                      </Box>
-                      <Box>
-                        <CalendarIcon />
-                      </Box>
-                      <Box>
-                        <TimeIcon />
-                      </Box>
-                    </SimpleGrid>
-                  </ListItem>
-                )}
-                {playlist?.tracks.items.map((track, i) => (
-                  <ListItem key={i}>
-                    <SimpleGrid columns={6}>
-                      <Box>
-                        {track.track.album.images.length !== 0 && (
-                          <Image
-                            marginLeft={2}
-                            boxSize="50px"
-                            src={track.track.album.images[0].url}
-                          />
-                        )}
-                      </Box>
-                      <Box>
-                        <Text
-                          color="white"
-                          marginTop={3}
+                      )}
+                    </Box>
+                    <Box>
+                      <Text
+                        color="white"
+                        marginTop={3}
+                      >
+                        {track.track.explicit
+                          ? `E ${track.track.name}`
+                          : `${track.track.name}`}
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text
+                        color="white"
+                        marginTop={3}
+                      >
+                        {track.track.artists[0].name}
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text
+                        color="white"
+                        marginTop={3}
+                      >
+                        {track.track.album.name}
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text
+                        color="white"
+                        marginTop={3}
+                      >
+                        {track.track.album.release_date}
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Text
+                        color="white"
+                        marginTop={3}
+                      >
+                        {millisToMinutesAndSeconds(track.track.duration_ms)}
+                      </Text>
+                    </Box>
+                    <Box>
+                      <Menu>
+                        <MenuButton
+                          margin={3}
+                          backgroundColor={colors.secondary}
+                          as={Button}
+                          alignItems="center"
+                          justifyContent="center"
+                          textAlign="center"
+                          rightIcon={<DragHandleIcon />}
+                        ></MenuButton>
+                        <MenuList
+                          borderColor="darkgray"
+                          backgroundColor={colors.secondary}
                         >
-                          {track.track.explicit
-                            ? `E ${track.track.name}`
-                            : `${track.track.name}`}
-                        </Text>
-                      </Box>
-                      <Box>
-                        <Text
-                          color="white"
-                          marginTop={3}
-                        >
-                          {track.track.artists[0].name}
-                        </Text>
-                      </Box>
-                      <Box>
-                        <Text
-                          color="white"
-                          marginTop={3}
-                        >
-                          {track.track.album.name}
-                        </Text>
-                      </Box>
-                      <Box>
-                        <Text
-                          color="white"
-                          marginTop={3}
-                        >
-                          {track.track.album.release_date}
-                        </Text>
-                      </Box>
-                      <Box>
-                        <Text
-                          color="white"
-                          marginTop={3}
-                        >
-                          {millisToMinutesAndSeconds(track.track.duration_ms)}
-                        </Text>
-                      </Box>
-                    </SimpleGrid>
-                    <Divider />
-                  </ListItem>
-                ))}
-              </List>
-            )}
+                          <MenuItem
+                            backgroundColor={colors.secondary}
+                            onClick={() =>
+                              dispatch(
+                                RemoveTrackFromPlaylist({
+                                  playlistId: playlist.id,
+                                  data: [
+                                    { uri: track.track.uri, positions: [i] },
+                                  ],
+                                })
+                              )
+                            }
+                          >
+                            Remove from playlist
+                          </MenuItem>
+                          <MenuItem
+                            backgroundColor={colors.secondary}
+                            onClick={() =>
+                              navigate(
+                                ARTIST_DETAILS_FN(track.track.artists[0].id)
+                              )
+                            }
+                          >
+                            Go to artist
+                          </MenuItem>
+                        </MenuList>
+                      </Menu>
+                    </Box>
+                  </SimpleGrid>
+                  <Divider />
+                </ListItem>
+              ))}
+            </List>
           </>
         )}
       </div>

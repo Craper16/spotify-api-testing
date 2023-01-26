@@ -30,6 +30,7 @@ export interface track {
     type: string;
     uri: string;
   }[];
+  uri: string;
   duration_ms: number;
   explicit: boolean;
   id: string;

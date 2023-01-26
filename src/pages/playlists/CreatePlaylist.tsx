@@ -17,6 +17,7 @@ import { createPlaylistData } from '../../config/playlists/playlistsConfig';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { CreateUserPlaylist } from '../../redux/playlists/playlistsActions';
 import { PLAYLISTS } from '../../helpers/pathsConsts';
+import { resetIsSuccess } from '../../redux/playlists/playlistsSlice';
 
 export default function CreatePlaylist() {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ export default function CreatePlaylist() {
   useEffect(() => {
     if (isSuccess) {
       navigate(PLAYLISTS);
+      dispatch(resetIsSuccess());
     }
   }, [isSuccess, navigate]);
 
@@ -61,12 +63,15 @@ export default function CreatePlaylist() {
             width: '50%',
           }}
         >
-          <FormControl isRequired isInvalid={!!errors.name && touched.name}>
+          <FormControl
+            isRequired
+            isInvalid={!!errors.name && touched.name}
+          >
             <FormLabel
               color={colors.primary}
-              textAlign='center'
-              margin='15'
-              htmlFor='name'
+              textAlign="center"
+              margin="15"
+              htmlFor="name"
             >
               Playlist Name
             </FormLabel>
@@ -75,12 +80,12 @@ export default function CreatePlaylist() {
               textColor={colors.primary}
               borderColor={colors.primary}
               focusBorderColor={colors.primary}
-              id='name'
+              id="name"
               value={values.name}
               onChange={handleChange('name')}
               onBlur={handleBlur('name')}
-              type='text'
-              placeholder='Name'
+              type="text"
+              placeholder="Name"
             />
             <FormErrorMessage marginBottom={10}>{errors.name}</FormErrorMessage>
           </FormControl>
@@ -90,9 +95,9 @@ export default function CreatePlaylist() {
           >
             <FormLabel
               color={colors.primary}
-              textAlign='center'
-              margin='15'
-              htmlFor='name'
+              textAlign="center"
+              margin="15"
+              htmlFor="name"
             >
               Playlist Description
             </FormLabel>
@@ -101,27 +106,34 @@ export default function CreatePlaylist() {
               textColor={colors.primary}
               borderColor={colors.primary}
               focusBorderColor={colors.primary}
-              id='password'
+              id="password"
               value={values.description}
               onChange={handleChange('description')}
               onBlur={handleBlur('description')}
-              type='text'
-              placeholder='Description'
+              type="text"
+              placeholder="Description"
             />
             <FormErrorMessage>{errors.description}</FormErrorMessage>
           </FormControl>
           <FormControl isInvalid={!!errors.public}>
-            <FormLabel color={colors.primary} textAlign='center' margin='15'>
+            <FormLabel
+              color={colors.primary}
+              textAlign="center"
+              margin="15"
+            >
               {values.public === false ? 'Private' : 'Public'}
             </FormLabel>
-            <Switch colorScheme='whatsapp' onChange={handleChange('public')} />
+            <Switch
+              colorScheme="whatsapp"
+              onChange={handleChange('public')}
+            />
           </FormControl>
           <Button
             marginTop={25}
             padding={6}
             height={50}
-            width='full'
-            type='submit'
+            width="full"
+            type="submit"
             background={colors.primary}
             textColor={colors.secondary}
             isDisabled={!isValid || isLoading}
@@ -129,7 +141,11 @@ export default function CreatePlaylist() {
             Create Playlist
           </Button>
           {isError && (
-            <Text textAlign='center' color='tomato' marginTop={10}>
+            <Text
+              textAlign="center"
+              color="tomato"
+              marginTop={10}
+            >
               {message || message.message}
             </Text>
           )}

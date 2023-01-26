@@ -4,6 +4,8 @@ import {
   createUserPlayList,
   createPlaylistData,
   getPlaylist,
+  trackToDelete,
+  removeTracksFromPlaylist,
 } from '../../config/playlists/playlistsConfig';
 import { track } from '../tracks/tracksActions';
 
@@ -98,6 +100,29 @@ export const CreateUserPlaylist = createAsyncThunk(
       }
       const data: playlist = response.data;
       return data;
+    } catch (error: any) {}
+  }
+);
+
+export const RemoveTrackFromPlaylist = createAsyncThunk(
+  'playlists/delete-track',
+  async (
+    deletedTracks: { data: trackToDelete[]; playlistId: string },
+    thunkAPI
+  ) => {
+    try {
+      const response = await removeTracksFromPlaylist(
+        deletedTracks.playlistId,
+        deletedTracks.data
+      );
+      console.log(response);
+
+      if (response.status !== 200) {
+        return thunkAPI.rejectWithValue(
+          response?.response?.data?.error?.message || 'An error has occured'
+        );
+      }
+      return deletedTracks;
     } catch (error: any) {
       return thunkAPI.rejectWithValue(error.message || 'An error has occured');
     }
