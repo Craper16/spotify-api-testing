@@ -130,11 +130,20 @@ export default function Tracks({
           spacing={20}
         >
           <Box>
-            <Text color={colors.secondary}>{`Popularity: ${popularity}`}</Text>
+            <Text
+              color={colors.secondary}
+              marginTop={2}
+            >{`Popularity: ${popularity}`}</Text>
           </Box>
           <Box>
             <Menu>
-              <MenuButton backgroundColor={colors.primary}>More</MenuButton>
+              <MenuButton
+                backgroundColor={colors.primary}
+                as={Button}
+                rightIcon={<HamburgerIcon />}
+              >
+                More...
+              </MenuButton>
               <MenuList backgroundColor={colors.secondary}>
                 <MenuItem
                   backgroundColor={colors.secondary}
