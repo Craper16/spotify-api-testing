@@ -53,7 +53,7 @@ export const GetCurrentUserPlaylists = createAsyncThunk(
 
       if (response.status !== 200) {
         return thunkAPI.rejectWithValue(
-          response.error?.message || 'An error has occured'
+          response?.response?.data?.error?.message || 'An error has occured'
         );
       }
 
@@ -73,7 +73,7 @@ export const GetPlaylist = createAsyncThunk(
 
       if (response.status !== 200) {
         return thunkAPI.rejectWithValue(
-          response?.error?.message || 'An Error has occured'
+          response?.response?.data?.error?.message || 'An Error has occured'
         );
       }
 
@@ -93,7 +93,7 @@ export const CreateUserPlaylist = createAsyncThunk(
 
       if (response.status !== 201) {
         return thunkAPI.rejectWithValue(
-          response.error?.message || 'An Error has occured'
+          response?.response?.data?.error?.message || 'An Error has occured'
         );
       }
       const data: playlist = response.data;

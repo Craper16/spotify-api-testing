@@ -14,16 +14,20 @@ export const GetUser = createAsyncThunk(
     try {
       const response = await getUser();
 
+      console.log(response);
+
       if (response.status !== 200) {
         return thunkAPI.rejectWithValue(
-          response?.error.message || 'An error has occured'
+          response?.response?.data?.error?.message || 'An error has occured'
         );
       }
 
       const data: responseData = response.data;
       return data;
     } catch (error: any) {
-      return thunkAPI.rejectWithValue(error.message || 'An error has occured');
+      return thunkAPI.rejectWithValue(
+        error?.response?.data?.message || 'An error has occured'
+      );
     }
   }
 );

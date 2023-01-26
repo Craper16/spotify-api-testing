@@ -43,6 +43,8 @@ export default function Search() {
 
   const { searchedTracks } = useAppSelector((state) => state.tracks);
   const trackLoading = useAppSelector((state) => state.tracks.isLoading);
+  const trackIsError = useAppSelector((state) => state.tracks.isError);
+  const trackMessage = useAppSelector((state) => state.tracks.message);
 
   useEffect(() => {
     if (search && searchType === SearchType.artist) {
@@ -97,7 +99,7 @@ export default function Search() {
               children={<SearchIcon color={colors.primary} />}
             />
             <Input
-              type="text"
+              type='text'
               textColor={colors.primary}
               borderColor={colors.primary}
               focusBorderColor={colors.primary}
@@ -120,11 +122,11 @@ export default function Search() {
       {isLoading ||
         (trackLoading && (
           <Spinner
-            size="lg"
-            justifyContent="center"
+            size='lg'
+            justifyContent='center'
             marginTop={20}
-            alignItems="center"
-            marginLeft="50%"
+            alignItems='center'
+            marginLeft='50%'
             color={colors.primary}
           />
         ))}
@@ -147,7 +149,6 @@ export default function Search() {
               onGoToArtist={() =>
                 navigate(ARTIST_DETAILS_FN(track.artists[0].id))
               }
-              onPlaylistSelect={() => {}}
               trackId={track.id}
               playlists={playlists}
               artist={track.album.artists[0].name}
@@ -169,11 +170,12 @@ export default function Search() {
             }}
           >{`Couldnt find "${search}"`}</Text>
         )}
-      {isError && (
-        <Text style={{ textAlign: 'center', color: 'tomato', marginTop: 23 }}>
-          {message.message}
-        </Text>
-      )}
+      {isError ||
+        (trackIsError && (
+          <Text style={{ textAlign: 'center', color: 'tomato', marginTop: 23 }}>
+            {message || trackMessage || message.message || trackMessage.message}
+          </Text>
+        ))}
     </>
   );
 }

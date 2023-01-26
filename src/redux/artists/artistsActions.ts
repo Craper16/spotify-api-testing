@@ -97,7 +97,7 @@ export const SearchArtists = createAsyncThunk(
 
       if (response.status !== 200) {
         return thunkAPI.rejectWithValue(
-          response?.error.message || 'An error has occured'
+          response?.response?.data?.error?.message || 'An error has occured'
         );
       }
 
@@ -117,7 +117,7 @@ export const GetArtist = createAsyncThunk(
 
       if (response.status !== 200) {
         return thunkAPI.rejectWithValue(
-          response?.error.message || 'An error has occured'
+          response?.response?.data?.error?.message || 'An error has occured'
         );
       }
 
@@ -137,7 +137,7 @@ export const GetArtistAlbums = createAsyncThunk(
 
       if (response.status !== 200) {
         return thunkAPI.rejectWithValue(
-          response?.error.message || 'An error has occured'
+          response?.response?.data?.error?.message || 'An error has occured'
         );
       }
 
@@ -157,7 +157,7 @@ export const GetArtistTopTracks = createAsyncThunk(
 
       if (response.status !== 200) {
         return thunkAPI.rejectWithValue(
-          response?.error.message || 'An error has occured'
+          response?.response?.data?.error?.message || 'An error has occured'
         );
       }
       const data: artistTopTrack[] = response?.data?.tracks;
@@ -176,7 +176,7 @@ export const GetArtistRelatedArtists = createAsyncThunk(
 
       if (response.status !== 200) {
         return thunkAPI.rejectWithValue(
-          response?.error.message || 'An error has occured'
+          response?.response?.data?.error?.message || 'An error has occured'
         );
       }
       const data: artist[] = response?.data?.artists;

@@ -57,7 +57,7 @@ export default function Playlists() {
       >
         <InputLeftElement children={<SearchIcon color={colors.primary} />} />
         <Input
-          type="text"
+          type='text'
           textColor={colors.primary}
           borderColor={colors.primary}
           focusBorderColor={colors.primary}
@@ -67,10 +67,7 @@ export default function Playlists() {
         <InputRightElement
           children={
             search ? (
-              <CloseIcon
-                color={colors.primary}
-                onClick={() => setSearch('')}
-              />
+              <CloseIcon color={colors.primary} onClick={() => setSearch('')} />
             ) : null
           }
         />
@@ -78,7 +75,7 @@ export default function Playlists() {
       {search && filteredPlaylists.length === 0 && (
         <Text
           color={colors.primary}
-          textAlign="center"
+          textAlign='center'
         >{`Could not find "${search}"`}</Text>
       )}
       {search
@@ -102,7 +99,7 @@ export default function Playlists() {
               tracks={playlist.tracks.total}
             />
           ))}
-      {isError && <Text color="tomato">{message.message}</Text>}
+      {isError && <Text color='tomato'>{message || message.message}</Text>}
     </div>
   );
 }

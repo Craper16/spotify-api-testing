@@ -11,6 +11,7 @@ interface playlistsModel {
   playlists: playlist[];
   playlist: playlistData | null;
   filteredPlaylists: playlist[];
+  isSuccess: boolean;
   isLoading: boolean;
   isError: boolean;
   message: any;
@@ -20,6 +21,7 @@ const initialState: playlistsModel = {
   playlists: [],
   playlist: null,
   filteredPlaylists: [],
+  isSuccess: false,
   isLoading: false,
   isError: false,
   message: null,
@@ -33,6 +35,7 @@ const playlistsSlice = createSlice({
       state.playlists = initialState.playlists;
       state.isLoading = initialState.isLoading;
       state.filteredPlaylists = initialState.filteredPlaylists;
+      state.isSuccess = initialState.isSuccess;
       state.playlist = initialState.playlist;
       state.isError = initialState.isError;
       state.message = initialState.message;
@@ -58,7 +61,7 @@ const playlistsSlice = createSlice({
     builder.addCase(GetCurrentUserPlaylists.rejected, (state, action) => {
       state.isError = true;
       state.isLoading = false;
-      state.message = action.error;
+      state.message = action.payload || action.error;
     });
     builder.addCase(GetPlaylist.pending, (state) => {
       state.isLoading = true;
@@ -74,23 +77,26 @@ const playlistsSlice = createSlice({
     builder.addCase(GetPlaylist.rejected, (state, action) => {
       state.isLoading = false;
       state.isError = true;
-      state.message = action.error;
+      state.message = action.payload || action.error;
     });
     builder.addCase(CreateUserPlaylist.pending, (state) => {
       state.isLoading = true;
       state.isError = false;
       state.message = null;
+      state.isSuccess = false;
     });
     builder.addCase(CreateUserPlaylist.fulfilled, (state, action) => {
       state.isLoading = false;
       state.playlists = [action.payload, ...state.playlists];
+      state.isSuccess = true;
       state.isError = false;
       state.message = null;
     });
     builder.addCase(CreateUserPlaylist.rejected, (state, action) => {
       state.isLoading = false;
+      state.isSuccess = false;
       state.isError = true;
-      state.message = action.error;
+      state.message = action.payload || action.error;
     });
   },
 });

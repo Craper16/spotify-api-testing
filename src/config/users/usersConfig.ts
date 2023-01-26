@@ -7,6 +7,6 @@ export const getUser = async () => {
     .get('/me', { headers: { Authorization: `Bearer ${access_token}` } })
     .then((response) => response)
     .catch(
-      (error) => error?.response?.data?.error?.message || 'An Error has occured'
+      (error) => error|| 'An Error has occured'
     );
 };

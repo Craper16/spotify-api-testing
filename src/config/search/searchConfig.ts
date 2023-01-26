@@ -9,7 +9,7 @@ export const searchArtists = async (search: string) => {
       headers: { Authorization: `Bearer ${access_token}` },
     })
     .then((response) => response)
-    .catch((error) => error?.response?.data?.error?.message  || 'An Error has occured');
+    .catch((error) => error || 'An Error has occured');
 };
 
 export const searchTracks = async (search: string) => {
@@ -21,5 +21,5 @@ export const searchTracks = async (search: string) => {
       headers: { Authorization: `Bearer ${access_token}` },
     })
     .then((response) => response)
-    .catch((error) => error?.response?.data?.error?.message  || 'An Error has occured');
+    .catch((error) => error  || 'An Error has occured');
 };

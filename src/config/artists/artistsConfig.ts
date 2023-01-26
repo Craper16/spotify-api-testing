@@ -20,7 +20,7 @@ export const getArtistAlbums = async (artistId: string) => {
     })
     .then((response) => response)
     .catch(
-      (error) => error?.response?.data?.error?.message || 'An error has occured'
+      (error) => error || 'An error has occured'
     );
 };
 
@@ -33,7 +33,7 @@ export const getAritstTopTracks = async (artistId: string) => {
     })
     .then((response) => response)
     .catch(
-      (error) => error?.response?.data?.error?.message || 'An error has occured'
+      (error) => error || 'An error has occured'
     );
 };
 
@@ -46,6 +46,6 @@ export const getArtistRelatedArtists = async (artistId: string) => {
     })
     .then((response) => response)
     .catch(
-      (error) => error?.response?.data?.error?.message || 'An error has occured'
+      (error) => error || 'An error has occured'
     );
 };

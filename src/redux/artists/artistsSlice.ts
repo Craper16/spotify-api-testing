@@ -62,7 +62,7 @@ const artistsSlice = createSlice({
     builder.addCase(SearchArtists.rejected, (state, action) => {
       state.isError = true;
       state.isLoading = false;
-      state.message = action.error || action.payload;
+      state.message = action.payload || action.error;
     });
     builder.addCase(GetArtist.pending, (state) => {
       state.isError = false;
@@ -77,7 +77,7 @@ const artistsSlice = createSlice({
     });
     builder.addCase(GetArtist.rejected, (state, action) => {
       state.isError = true;
-      state.message = action.error || action.payload;
+      state.message = action.payload || action.error;
       state.isLoading = false;
     });
     builder.addCase(GetArtistAlbums.pending, (state) => {
@@ -94,7 +94,7 @@ const artistsSlice = createSlice({
     builder.addCase(GetArtistAlbums.rejected, (state, action) => {
       state.isError = true;
       state.isLoading = false;
-      state.message = action.error || action.payload;
+      state.message = action.payload || action.error;
     });
     builder.addCase(GetArtistTopTracks.pending, (state) => {
       state.isError = false;
@@ -109,7 +109,7 @@ const artistsSlice = createSlice({
     });
     builder.addCase(GetArtistTopTracks.rejected, (state, action) => {
       state.isError = true;
-      state.message = action.error || action.payload;
+      state.message = action.payload || action.error;
       state.isLoading = false;
     });
     builder.addCase(GetArtistRelatedArtists.pending, (state) => {
@@ -126,7 +126,7 @@ const artistsSlice = createSlice({
     builder.addCase(GetArtistRelatedArtists.rejected, (state, action) => {
       state.isLoading = false;
       state.isError = true;
-      state.message = action.error || action.payload;
+      state.message = action.payload || action.error;
     });
   },
 });

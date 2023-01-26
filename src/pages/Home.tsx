@@ -1,4 +1,4 @@
-import { Box, SimpleGrid } from '@chakra-ui/react';
+import { Box, SimpleGrid, Text } from '@chakra-ui/react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { colors } from '../helpers/consts';
@@ -10,7 +10,15 @@ interface props {
 }
 
 export default function Home({ display_name }: props) {
-  const { isLoading } = useAppSelector((state) => state.auth);
+  const { isLoading, isError, message } = useAppSelector((state) => state.auth);
+
+  if (isError) {
+    return (
+      <Text textAlign='center' color='tomato'>
+        {message || message.message}
+      </Text>
+    );
+  }
 
   return (
     <>

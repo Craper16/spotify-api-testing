@@ -41,7 +41,7 @@ const tracksSlice = createSlice({
     builder.addCase(SearchTracks.rejected, (state, action) => {
       state.isError = true;
       state.isLoading = false;
-      state.message = action.error;
+      state.message = action.payload || action.error;
     });
   },
 });
