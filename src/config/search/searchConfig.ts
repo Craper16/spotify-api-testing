@@ -8,10 +8,7 @@ export const searchArtists = async (search: string) => {
       params: { q: search, type: 'artist' },
       headers: { Authorization: `Bearer ${access_token}` },
     })
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
+    .then((response) => response)
     .catch((error) => error.error?.message || 'An Error has occured');
 };
 
@@ -23,9 +20,6 @@ export const searchTracks = async (search: string) => {
       params: { q: search, type: 'track' },
       headers: { Authorization: `Bearer ${access_token}` },
     })
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
+    .then((response) => response)
     .catch((error) => error?.response.message || 'An Error has occured');
 };

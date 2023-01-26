@@ -13,10 +13,7 @@ export const getCurrentUserPlaylists = async (limit: number) => {
       params: { limit: limit },
       headers: { Authorization: `Bearer ${access_token}` },
     })
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
+    .then((response) => response)
     .catch((error) => error?.error?.message || 'An Error has occured');
 };
 
@@ -27,10 +24,7 @@ export const getPlaylist = async (playlistId: string) => {
     .get(`/playlists/${playlistId}`, {
       headers: { Authorization: `Bearer ${access_token}` },
     })
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
+    .then((response) => response)
     .catch((error) => error?.error?.message || 'An Error has occured');
 };
 
@@ -50,10 +44,7 @@ export const createUserPlayList = async (data: createPlaylistData) => {
     .post(`/users/${userId}/playlists`, data, {
       headers: { Authorization: `Bearer ${access_token}` },
     })
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
+    .then((response) => response)
     .catch((error) => error?.error?.message || 'An Error has occured');
 };
 
@@ -69,9 +60,6 @@ export const addTrackToPlaylist = async (
       trackId,
       { headers: { Authorization: `Bearer ${access_token}` } }
     )
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
+    .then((response) => response)
     .catch((error) => error?.error?.message || 'An error has occured');
 };

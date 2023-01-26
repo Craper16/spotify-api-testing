@@ -7,10 +7,7 @@ export const getArtist = async (artistId: string) => {
     .get(`/artists/${artistId}`, {
       headers: { Authorization: `Bearer ${access_token}` },
     })
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
+    .then((response) => response)
     .catch((error) => error?.error?.message || 'An Error has occured');
 };
 
@@ -21,10 +18,7 @@ export const getArtistAlbums = async (artistId: string) => {
     .get(`/artists/${artistId}/albums?limit=50`, {
       headers: { Authorization: `Bearer ${access_token}` },
     })
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
+    .then((response) => response)
     .catch((error) => error?.error?.message || 'An error has occured');
 };
 
@@ -35,10 +29,7 @@ export const getAritstTopTracks = async (artistId: string) => {
     .get(`/artists/${artistId}/top-tracks?market=US`, {
       headers: { Authorization: `Bearer ${access_token}` },
     })
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
+    .then((response) => response)
     .catch((error) => error?.error?.message || 'An error has occured');
 };
 
@@ -49,9 +40,6 @@ export const getArtistRelatedArtists = async (artistId: string) => {
     .get(`/artists/${artistId}/related-artists`, {
       headers: { Authorization: `Bearer ${access_token}` },
     })
-    .then((response) => {
-      console.log(response);
-      return response;
-    })
+    .then((response) => response)
     .catch((error) => error?.error?.message || 'An error has occured');
 };

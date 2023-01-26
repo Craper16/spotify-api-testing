@@ -37,7 +37,6 @@ export default function Playlists() {
   };
 
   const getPlaylists = useCallback(() => {
-    console.log('isRunning');
     dispatch(GetCurrentUserPlaylists(50));
   }, [dispatch]);
 
