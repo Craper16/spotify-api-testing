@@ -6,5 +6,7 @@ export const getUser = async () => {
   return await instance
     .get('/me', { headers: { Authorization: `Bearer ${access_token}` } })
     .then((response) => response)
-    .catch((error) => error.error?.message || 'An Error has occured');
+    .catch(
+      (error) => error?.response?.data?.error?.message || 'An Error has occured'
+    );
 };

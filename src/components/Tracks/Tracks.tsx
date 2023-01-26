@@ -72,9 +72,22 @@ export default function Tracks({
     }
   }, [isOpen]);
 
-  const handleAddToPlaylist = (playlistName: string) => {
+  const handleAddToPlaylist = async (playlistName: string) => {
     if (playlistId && trackId) {
-      addTrackToPlaylist(playlistId, trackId);
+      const response = await addTrackToPlaylist(playlistId, trackId);
+
+      console.log(response);
+
+      if (response.status !== 201) {
+        return toast({
+          title: 'Error!',
+          description: `${response.response?.data?.error?.message}`,
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        });
+      }
+
       return toast({
         title: 'Success',
         description: `Added ${name} to ${playlistName}`,
@@ -84,9 +97,9 @@ export default function Tracks({
       });
     }
     return toast({
-      title: 'Please enter a playlist',
+      title: 'No playlist selected',
       description: 'You must select a playlist',
-      status: 'error',
+      status: 'warning',
       duration: 5000,
       isClosable: true,
     });
@@ -94,10 +107,10 @@ export default function Tracks({
 
   return (
     <Card
-      maxW="sm"
-      justifyContent="center"
-      margin="auto"
-      marginLeft="36%"
+      maxW='sm'
+      justifyContent='center'
+      margin='auto'
+      marginLeft='36%'
       marginTop={13}
       background={colors.primary}
     >
@@ -108,13 +121,10 @@ export default function Tracks({
               ? images[0].url!
               : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIMAAACCCAMAAABSH4vxAAAAMFBMVEUiIyY+PkAREhMfICMYGRsxMTM5OTslJikoKSwzNDYsLTA3NzoqKy0uLzEdHiBAQEFuppyBAAACLElEQVR4nO3a0XaDIAwAUCyDIOD8/7+dnVu3SSJxB0K3kzxTvQ0QFTC38WFur3ZwvJibNYNDDWpQgxrUoAY1qEENalCDGlhh65fvabAGsvPTMtAQZj+t0xZxiOH9/z/CixsgfL+/uMGa4NJUhJwB8uLL+wsatvwTAAnDnv+VBHQ3QKDyL2QAlxiAXgZrskvraf57G+Bk/AkZwiVAH8P8BIZrHaGG5zD4/Qk2yuCTC9ZaN8yQlgB72xGGdbt/Nl9XFDf4FOHQVtaQYjDllcQMfo5AfEaIGPycj/kXNXi39f/5r7savMO6X9bgeL/qa+C1VYMa1KAGNahBDWpQw98zWMjx/tEzzvBYNfddv/3PDMcFK3lDnI4hbnAFQdyALRwKGxaEIGzAl3BlDchGUlMDQIhLDnBiyCihlcHeNyv32P8rZrDESnZqYoAiyWgecEJ1o5dliOUyGGYAwhAaGJCygxqI4TDXrs8wYIQrhrM1M6ahrP+UAa8O9TeNqoHoZPaYnBucfyDmG3duVgcDw0BtoKF5KBtzCFUDtYGG9/LxkbWwanDNQC3SE2c7fiB8dUawDFTZoSbcVtM/Gqwp8wRVAzUcTvoZskt+dswcMAxE2amUX8s4kMQ3UNWh6RmaX41J1oxrZ8AeFrX3gdYGKBPROAuMWl3MjNqprw4GE35kYr4w59oZtuL3qfBXZn1bw1YmFueWWHsn62voG2pQgxrUoAY1qEENalCDGv6J4Q0Nixio9hrgfwAAAABJRU5ErkJggg=='
           }
-          borderRadius="lg"
+          borderRadius='lg'
         />
-        <Stack
-          mt="6"
-          spacing="3"
-        >
-          <Heading size="md">{name}</Heading>
+        <Stack mt='6' spacing='3'>
+          <Heading size='md'>{name}</Heading>
           <Text color={colors.secondary}>{artist}</Text>
           <Text
             color={colors.secondary}
@@ -124,11 +134,7 @@ export default function Tracks({
       </CardBody>
       <Divider />
       <CardFooter>
-        <SimpleGrid
-          margin="auto"
-          columns={2}
-          spacing={20}
-        >
+        <SimpleGrid margin='auto' columns={2} spacing={20}>
           <Box>
             <Text
               color={colors.secondary}
@@ -147,7 +153,7 @@ export default function Tracks({
               <MenuList backgroundColor={colors.secondary}>
                 <MenuItem
                   backgroundColor={colors.secondary}
-                  justifyContent="center"
+                  justifyContent='center'
                   as={Button}
                   onClick={onOpen}
                 >
@@ -156,7 +162,7 @@ export default function Tracks({
                     isCentered
                     onClose={onClose}
                     isOpen={isOpen}
-                    motionPreset="slideInRight"
+                    motionPreset='slideInRight'
                   >
                     <ModalOverlay />
                     <ModalContent>
@@ -168,10 +174,7 @@ export default function Tracks({
                       </ModalHeader>
                       <ModalCloseButton />
                       <ModalBody backgroundColor={colors.secondary}>
-                        <SimpleGrid
-                          columns={2}
-                          marginBottom={4}
-                        >
+                        <SimpleGrid columns={2} marginBottom={4}>
                           <Box>
                             <Text>Playlist</Text>
                           </Box>
@@ -185,10 +188,7 @@ export default function Tracks({
                               setSelectedPlaylistName(playlist.name);
                             }}
                           >
-                            <SimpleGrid
-                              columns={2}
-                              marginBottom={2}
-                            >
+                            <SimpleGrid columns={2} marginBottom={2}>
                               <Box
                                 backgroundColor={
                                   playlistId === playlist.id
@@ -230,7 +230,7 @@ export default function Tracks({
                       </ModalBody>
                       <ModalFooter backgroundColor={colors.secondary}>
                         <Button
-                          variant="ghost"
+                          variant='ghost'
                           color={colors.primary}
                           onClick={() => {
                             handleAddToPlaylist(selectedPlaylistName);
@@ -241,7 +241,7 @@ export default function Tracks({
                           Add
                         </Button>
                         <Button
-                          colorScheme="blackAlpha"
+                          colorScheme='blackAlpha'
                           mr={3}
                           onClick={onClose}
                         >

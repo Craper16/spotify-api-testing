@@ -8,7 +8,7 @@ export const getArtist = async (artistId: string) => {
       headers: { Authorization: `Bearer ${access_token}` },
     })
     .then((response) => response)
-    .catch((error) => error?.error?.message || 'An Error has occured');
+    .catch((error) => error || 'An Error has occured');
 };
 
 export const getArtistAlbums = async (artistId: string) => {
@@ -19,7 +19,9 @@ export const getArtistAlbums = async (artistId: string) => {
       headers: { Authorization: `Bearer ${access_token}` },
     })
     .then((response) => response)
-    .catch((error) => error?.error?.message || 'An error has occured');
+    .catch(
+      (error) => error?.response?.data?.error?.message || 'An error has occured'
+    );
 };
 
 export const getAritstTopTracks = async (artistId: string) => {
@@ -30,7 +32,9 @@ export const getAritstTopTracks = async (artistId: string) => {
       headers: { Authorization: `Bearer ${access_token}` },
     })
     .then((response) => response)
-    .catch((error) => error?.error?.message || 'An error has occured');
+    .catch(
+      (error) => error?.response?.data?.error?.message || 'An error has occured'
+    );
 };
 
 export const getArtistRelatedArtists = async (artistId: string) => {
@@ -41,5 +45,7 @@ export const getArtistRelatedArtists = async (artistId: string) => {
       headers: { Authorization: `Bearer ${access_token}` },
     })
     .then((response) => response)
-    .catch((error) => error?.error?.message || 'An error has occured');
+    .catch(
+      (error) => error?.response?.data?.error?.message || 'An error has occured'
+    );
 };
